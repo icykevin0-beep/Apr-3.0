@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR - Gestión de Socios</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#51a9fb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1923",
+                        "sidebar-dark": "#1a1f36",
+                        "card-glass": "rgba(33, 54, 74, 0.6)",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetic in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f1923; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d3748; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a5568; 
+        }
+        .glass-panel {
+            background: rgba(33, 54, 74, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-modal {
+            background: rgba(26, 31, 54, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-white font-display overflow-hidden h-screen flex">
+<!-- Sidebar -->
+<aside class="w-64 h-full bg-sidebar-dark flex flex-col border-r border-white/5 flex-shrink-0 z-20">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined text-white">water_drop</span>
+</div>
+<h1 class="text-white text-lg font-bold tracking-tight">Lumina APR</h1>
+</div>
+<div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/20 text-primary border border-primary/10 transition-all" href="#">
+<span class="material-symbols-outlined fill-1">group</span>
+<span class="font-medium text-sm">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">opacity</span>
+<span class="font-medium text-sm">Lecturas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium text-sm">Pagos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-medium text-sm">Reportes</span>
+</a>
+</div>
+<div class="p-4 border-t border-white/5">
+<div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors">
+<div class="size-9 rounded-full bg-center bg-cover" data-alt="Avatar de usuario administrador, gradiente abstracto" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBO32xLqKdkwf9prfsWbvtb-3vad08TLnS_5_2JvVcv_NRwDxFJMliT7EnKwSag4nVhqiYD572kr74MQWbYdvQQrmIpyiz2UA3P7VN-iVb634jocGo8kjh-oVyfK3kKBHGFJPpBSvpsal8sbrV7pNjEEirIslJWICHt8fkczxU_uiqUXm2eyiblM4ER7_lrZWyi2JIKggojRXxqKJ_ItVmSYKUjcgGRzjEwLlVD8UMbcny1sGsBzMAbq91wLIut-qMvg-T_nQgjHAM");'></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold text-white">Admin Usuario</p>
+<p class="text-xs text-slate-400">admin@lumina.cl</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full relative overflow-hidden bg-background-dark">
+<!-- Background Decor -->
+<div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-900/10 to-transparent pointer-events-none"></div>
+<!-- Scrollable Area -->
+<div class="flex-1 overflow-y-auto p-8 relative z-10">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Header -->
+<header class="flex flex-wrap items-center justify-between gap-4">
+<div>
+<h2 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">
+                            👥 Gestión de Socios
+                        </h2>
+<p class="text-slate-400 text-sm mt-1">Administra la información y estado de los beneficiarios.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-sm font-bold transition-all shadow-lg">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+                            Importar Excel
+                        </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4facfe] to-[#667eea] hover:shadow-[0_0_20px_rgba(79,172,254,0.4)] text-white text-sm font-bold transition-all shadow-lg transform hover:-translate-y-0.5">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                            Nuevo Socio
+                        </button>
+</div>
+</header>
+<!-- KPI Cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+<!-- Total -->
+<div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-blue-400">groups</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium">Total Socios</p>
+<p class="text-3xl font-bold text-white mt-1">156</p>
+</div>
+</div>
+</div>
+<!-- Activos -->
+<div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-emerald-400">check_circle</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium">Activos</p>
+<p class="text-3xl font-bold text-white mt-1">148</p>
+</div>
+</div>
+</div>
+<!-- Morosos -->
+<div class="glass-panel p-6 rounded-xl relative overflow-hidden group border-orange-500/20">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-orange-400">warning</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium">Morosos</p>
+<p class="text-3xl font-bold text-white mt-1">8</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Table Section -->
+<section class="glass-panel rounded-xl flex flex-col overflow-hidden">
+<!-- Control Bar -->
+<div class="p-5 border-b border-white/5 flex flex-wrap gap-4 items-center justify-between bg-white/5">
+<div class="flex items-center gap-3 flex-1 min-w-[300px]">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-[#101a23] border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-primary focus:border-transparent placeholder-slate-500 outline-none transition-all" placeholder="Buscar por RUT o nombre..." type="text"/>
+</div>
+<div class="relative">
+<select class="appearance-none bg-[#101a23] border border-slate-700 text-white text-sm rounded-lg focus:ring-primary focus:border-primary block w-40 pl-4 pr-10 py-2.5 cursor-pointer">
+<option>Todos</option>
+<option>Activo</option>
+<option>Moroso</option>
+<option>Suspendido</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<button class="text-slate-300 hover:text-white text-sm font-semibold flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                            Exportar Excel
+                        </button>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/5 border-b border-white/5 text-slate-400 text-xs uppercase font-bold tracking-wider">
+<th class="px-6 py-4">RUT</th>
+<th class="px-6 py-4">Nombre Completo</th>
+<th class="px-6 py-4">Estado</th>
+<th class="px-6 py-4">Última Lectura</th>
+<th class="px-6 py-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 text-sm">
+<!-- Row 1 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white font-mono">12.345.678-5</td>
+<td class="px-6 py-4 text-slate-200">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">JP</div>
+                                            Juan Pérez González
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="size-1.5 rounded-full bg-emerald-400"></span>
+                                            Activo
+                                        </span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">15 m³</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-lg hover:bg-red-500/20 flex items-center justify-center text-slate-300 hover:text-red-400 transition-colors" title="Eliminar">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white font-mono">11.111.111-1</td>
+<td class="px-6 py-4 text-slate-200">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">ML</div>
+                                            María López Soto
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="size-1.5 rounded-full bg-emerald-400"></span>
+                                            Activo
+                                        </span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">22 m³</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-lg hover:bg-red-500/20 flex items-center justify-center text-slate-300 hover:text-red-400 transition-colors" title="Eliminar">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white font-mono">9.876.543-2</td>
+<td class="px-6 py-4 text-slate-200">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-xs font-bold text-white shadow-sm">PS</div>
+                                            Pedro Soto Muñoz
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20">
+<span class="size-1.5 rounded-full bg-red-400"></span>
+                                            Moroso
+                                        </span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">8 m³</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-lg hover:bg-red-500/20 flex items-center justify-center text-slate-300 hover:text-red-400 transition-colors" title="Eliminar">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Placeholder Rows for visual fill -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white font-mono">15.432.190-K</td>
+<td class="px-6 py-4 text-slate-200">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">AR</div>
+                                            Ana Rojas Toro
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="size-1.5 rounded-full bg-emerald-400"></span>
+                                            Activo
+                                        </span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">12 m³</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-lg hover:bg-red-500/20 flex items-center justify-center text-slate-300 hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-white/5 flex items-center justify-between">
+<p class="text-xs text-slate-400">Mostrando 1 a 4 de 156 resultados</p>
+<div class="flex items-center gap-2">
+<button class="size-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 rounded-lg bg-primary text-white font-bold text-xs flex items-center justify-center shadow-lg shadow-blue-500/20">1</button>
+<button class="size-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white font-bold text-xs flex items-center justify-center transition-colors">2</button>
+<button class="size-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white font-bold text-xs flex items-center justify-center transition-colors">3</button>
+<span class="text-slate-500 text-xs px-1">...</span>
+<button class="size-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Floating Modal (Overlay) -->
+<!-- In a real app, this would be conditionally rendered. Shown here for design demonstration. -->
+<div class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+<div class="glass-modal w-full max-w-lg rounded-2xl flex flex-col animate-[fadeIn_0.2s_ease-out]">
+<!-- Modal Header -->
+<div class="flex items-center justify-between p-6 border-b border-white/10">
+<h3 class="text-xl font-bold text-white">Nuevo Socio</h3>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-6 space-y-5">
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">RUT</label>
+<input class="w-full bg-[#0f1923] border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-slate-600" placeholder="Ej: 12.345.678-9" type="text"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Nombre Completo</label>
+<input class="w-full bg-[#0f1923] border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-slate-600" placeholder="Nombre y Apellidos" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Teléfono</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">+56</span>
+<input class="w-full bg-[#0f1923] border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-slate-600" placeholder="9 1234 5678" type="tel"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Sector</label>
+<select class="w-full bg-[#0f1923] border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all cursor-pointer">
+<option>Seleccionar...</option>
+<option>El Manzano</option>
+<option>Las Higueras</option>
+<option>Centro</option>
+</select>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Dirección</label>
+<input class="w-full bg-[#0f1923] border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-slate-600" placeholder="Calle y número de casa" type="text"/>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-6 border-t border-white/10 flex justify-end gap-3 bg-black/20">
+<button class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 font-bold text-sm transition-colors">
+                        Cancelar
+                    </button>
+<button class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#4facfe] to-[#667eea] text-white font-bold text-sm shadow-lg hover:shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
+                        Guardar Socio
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR - Control de Acceso</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#51a9fb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1923",
+                        "surface-dark": "#16222d",
+                        "surface-darker": "#101a23",
+                        "accent-danger": "#ef4444",
+                        "accent-success": "#10b981",
+                        "accent-warning": "#f59e0b",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(22, 34, 45, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-checkbox:checked {
+            background-color: #51a9fb;
+            border-color: #51a9fb;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-72 bg-surface-darker flex-shrink-0 flex flex-col border-r border-slate-800/50 hidden lg:flex">
+<div class="h-16 flex items-center px-6 border-b border-slate-800/50">
+<h1 class="text-white text-xl font-bold tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+                Lumina APR
+            </h1>
+</div>
+<div class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+<div class="mb-6">
+<p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Principal</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined fill-1">shield_person</span>
+<span class="font-medium">Control de Acceso</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">monitoring</span>
+<span class="font-medium">Reportes</span>
+</a>
+</div>
+<div class="mb-6">
+<p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Administración</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="font-medium">Configuración</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">group</span>
+<span class="font-medium">Usuarios</span>
+</a>
+</div>
+<div>
+<p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Sistema</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">help</span>
+<span class="font-medium">Ayuda</span>
+</a>
+</div>
+</div>
+<div class="p-4 border-t border-slate-800/50">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold bg-cover bg-center" data-alt="Admin user profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuChW40kFrHQxvxOlaLI_RqafsVhs-4bmO_O2ekvmMGIpYGWXq0pB3zrYlrTucan6jwVHDBMSD8_Oadr6Ndn1rCfLyTmtc7hHIpOr8F5frl30hlcAHyflxSoKOeVFE5yTFJQZ_fgOz9PPc-0StTSd3Ig8ZZdb8IMAW8BWt0g5fw6QRe7eel2g97XWZNPsJI8jjyLqud5yT5UnSHbFi3FE4DqjzhGm61HuSTI_kUtelWQvGeQxxCYN6QlM33suH1iBHI1u0BbHqELgcs');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-white">Admin Principal</span>
+<span class="text-xs text-slate-400">admin@lumina.com</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="h-16 bg-surface-dark border-b border-slate-800 flex items-center justify-between px-6 shadow-sm z-10">
+<div class="flex items-center gap-2 text-sm">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Administración</a>
+<span class="text-slate-600">/</span>
+<span class="text-white font-medium">Seguridad y Permisos</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-800 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent-danger"></span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Nuevo Rol
+                </button>
+</div>
+</header>
+<!-- Content Scroll Area -->
+<div class="flex-1 overflow-y-auto p-6 space-y-8">
+<!-- Top Section: Access Requests -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold text-white flex items-center gap-2">
+<span class="w-2 h-8 bg-accent-warning rounded-full block"></span>
+                        Solicitudes de Acceso Pendientes
+                    </h2>
+<span class="bg-accent-warning/20 text-accent-warning text-xs font-bold px-3 py-1 rounded-full border border-accent-warning/20">3 Pendientes</span>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden">
+<table class="w-full text-sm text-left">
+<thead class="bg-slate-800/50 text-slate-400 uppercase text-xs">
+<tr>
+<th class="px-6 py-4 font-semibold">Solicitante</th>
+<th class="px-6 py-4 font-semibold">Email</th>
+<th class="px-6 py-4 font-semibold">Departamento</th>
+<th class="px-6 py-4 font-semibold">Fecha</th>
+<th class="px-6 py-4 font-semibold text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/50">
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs font-bold">JP</div>
+                                    Juan Pérez
+                                </td>
+<td class="px-6 py-4 text-slate-300">juan.perez@lumina.com</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded-md bg-slate-800 text-slate-300 text-xs">Operaciones</span></td>
+<td class="px-6 py-4 text-slate-400">Hoy, 10:30 AM</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="text-slate-400 hover:text-white px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors">Rechazar</button>
+<button class="bg-primary text-white px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/10">Aprobar y Asignar</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs font-bold">SG</div>
+                                    Sofia Gómez
+                                </td>
+<td class="px-6 py-4 text-slate-300">sofia.g@lumina.com</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded-md bg-slate-800 text-slate-300 text-xs">Auditoría</span></td>
+<td class="px-6 py-4 text-slate-400">Ayer, 14:15 PM</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="text-slate-400 hover:text-white px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors">Rechazar</button>
+<button class="bg-primary text-white px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/10">Aprobar y Asignar</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Main Section: Users & Permissions Matrix -->
+<section class="grid grid-cols-1 xl:grid-cols-12 gap-6 h-auto xl:min-h-[500px]">
+<!-- User List -->
+<div class="xl:col-span-4 flex flex-col gap-4">
+<h2 class="text-xl font-bold text-white flex items-center gap-2">
+<span class="w-2 h-8 bg-primary rounded-full block"></span>
+                        Gestión de Permisos
+                    </h2>
+<div class="glass-panel rounded-xl flex-1 flex flex-col overflow-hidden max-h-[600px]">
+<div class="p-4 border-b border-slate-800/50">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-[20px]">search</span>
+<input class="w-full bg-slate-900/50 border border-slate-700 text-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder-slate-500" placeholder="Buscar usuario o rol..." type="text"/>
+</div>
+</div>
+<div class="overflow-y-auto flex-1 p-2 space-y-1">
+<!-- Active Item -->
+<div class="p-3 rounded-lg bg-primary/10 border border-primary/20 cursor-pointer flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center ring-2 ring-primary/30" data-alt="Female user profile" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB8jkATkOSLTW4v5UejU2EUbJbG1iR_ex_GfwiEu1Fmisds3fI463RMsDokPMDPnNCo_8o4XFE-awOznsvmb25-zewyjB77HHpt3aWqCvcotw8dId9le7C4_7im1qo8f9lOSQrWKoYF9gpefkrQObJt_JHBT02MGv9ilXVBLk-n0Tfm3yThPjvDPHkpxhGStWWmwZ8u4jOOdfzhvvElOuuM3SjegpIHbLYRmQaXUASsLVsuwQruXNoN2gM6TSawmNWFgSsJdqtyeLQ');"></div>
+<div>
+<p class="text-white font-medium text-sm">Elena Rodriguez</p>
+<p class="text-primary text-xs">Gerente General</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+<!-- Inactive Items -->
+<div class="p-3 rounded-lg hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50 cursor-pointer flex items-center justify-between group transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300 font-bold">MR</div>
+<div>
+<p class="text-slate-300 group-hover:text-white font-medium text-sm">Miguel Ramirez</p>
+<p class="text-slate-500 text-xs">Contabilidad</p>
+</div>
+</div>
+</div>
+<div class="p-3 rounded-lg hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50 cursor-pointer flex items-center justify-between group transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center" data-alt="Male user profile" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAfjxJLUtY-eq9YtncucTjcj9iaTVTHJvzt5nEoTekODY7axZyMM9Y74exAKqEN1LyJ9BTbyToIcNXVQFV48ZHNU2f_WoV4WAFs9ILYXZ_jmkgN_PhxeuIxztb2S-S8Hm3fVAZeEn1PasFnw_OrOiC7NzwbDq8sWCPPbNPADth9yIIzGZ7Bk6jfS2vV1lsDw0xS5jX0HpO_BYAWeJUgT7R0TGZJYABOgqhLes80g-pu9Cjl9I-Duf30OhKV6YqKau-BYqcZi9IXiXI');"></div>
+<div>
+<p class="text-slate-300 group-hover:text-white font-medium text-sm">Carlos Diaz</p>
+<p class="text-slate-500 text-xs">Operador de Campo</p>
+</div>
+</div>
+</div>
+<div class="p-3 rounded-lg hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50 cursor-pointer flex items-center justify-between group transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300 font-bold">AL</div>
+<div>
+<p class="text-slate-300 group-hover:text-white font-medium text-sm">Ana Lopez</p>
+<p class="text-slate-500 text-xs">Atención al Cliente</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Permission Matrix -->
+<div class="xl:col-span-8 flex flex-col gap-4">
+<div class="flex items-center justify-between h-11"> <!-- Align with title height -->
+<div class="flex items-center gap-4">
+<h3 class="text-lg font-bold text-white">Matriz de Permisos: <span class="text-primary font-normal">Elena Rodriguez</span></h3>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-accent-warning/20 text-accent-warning border border-accent-warning/20 uppercase tracking-wide">Acceso Alto</span>
+</div>
+<div class="flex gap-2">
+<button class="text-slate-400 hover:text-white px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors">Cancelar</button>
+<button class="bg-accent-success/90 hover:bg-accent-success text-white px-4 py-1.5 text-xs font-bold rounded-lg transition-colors shadow-lg shadow-green-900/20">Guardar Cambios</button>
+</div>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden flex-1">
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="bg-surface-darker text-slate-400 text-xs uppercase border-b border-slate-700/50">
+<tr>
+<th class="px-6 py-4 font-semibold w-1/4">Módulo</th>
+<th class="px-4 py-4 font-semibold text-center w-[15%]">Solo Ver</th>
+<th class="px-4 py-4 font-semibold text-center w-[15%]">Crear/Editar</th>
+<th class="px-4 py-4 font-semibold text-center w-[15%] text-accent-danger/80">Eliminar</th>
+<th class="px-4 py-4 font-semibold text-center w-[15%] text-accent-success/80">Exportar</th>
+<th class="px-4 py-4 font-semibold text-center w-[15%]">Admin</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/30">
+<!-- Row 1: Socios -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary text-[20px]">groups</span>
+                                            Socios
+                                        </td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="rounded border-slate-600 bg-slate-700/50 text-slate-500 focus:ring-0 focus:ring-offset-0 cursor-not-allowed" disabled="" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<div class="w-2 h-2 rounded-full bg-slate-700 mx-auto"></div>
+</td>
+</tr>
+<!-- Row 2: Lecturas -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary text-[20px]">water_ec</span>
+                                            Lecturas
+                                        </td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="rounded border-slate-600 bg-slate-700/50 text-slate-500 focus:ring-0 focus:ring-offset-0 cursor-not-allowed" disabled="" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<div class="w-2 h-2 rounded-full bg-slate-700 mx-auto"></div>
+</td>
+</tr>
+<!-- Row 3: Pagos -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary text-[20px]">payments</span>
+                                            Pagos
+                                        </td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="rounded border-slate-600 bg-slate-700/50 text-slate-500 focus:ring-0 focus:ring-offset-0 cursor-not-allowed" disabled="" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<div class="w-2 h-2 rounded-full bg-slate-700 mx-auto"></div>
+</td>
+</tr>
+<!-- Row 4: Gastos -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary text-[20px]">receipt_long</span>
+                                            Gastos
+                                        </td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="rounded border-slate-600 bg-slate-700/50 text-slate-500 focus:ring-0 focus:ring-offset-0 cursor-not-allowed" disabled="" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<div class="w-2 h-2 rounded-full bg-slate-700 mx-auto"></div>
+</td>
+</tr>
+<!-- Row 5: Configuración -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary text-[20px]">settings</span>
+                                            Configuración
+                                        </td>
+<td class="px-4 py-4 text-center">
+<input checked="" class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="custom-checkbox rounded border-slate-600 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900 cursor-pointer w-4 h-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-center">
+<div class="w-2 h-2 rounded-full bg-slate-700 mx-auto"></div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Active Sessions -->
+<section class="pb-8">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold text-white flex items-center gap-2">
+<span class="w-2 h-8 bg-accent-danger rounded-full block"></span>
+                        Sesiones Activas
+                    </h2>
+<button class="text-xs text-slate-400 hover:text-white transition-colors">Ver historial completo</button>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden">
+<table class="w-full text-sm text-left">
+<thead class="bg-slate-800/50 text-slate-400 uppercase text-xs">
+<tr>
+<th class="px-6 py-4 font-semibold">Usuario</th>
+<th class="px-6 py-4 font-semibold">Dispositivo</th>
+<th class="px-6 py-4 font-semibold">Ubicación</th>
+<th class="px-6 py-4 font-semibold">Inicio de Sesión</th>
+<th class="px-6 py-4 font-semibold text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/50">
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-medium text-white">Elena Rodriguez</td>
+<td class="px-6 py-4 text-slate-300 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 text-[18px]">desktop_windows</span>
+                                    Chrome en Windows
+                                </td>
+<td class="px-6 py-4 text-slate-400">Oficina Central (192.168.1.45)</td>
+<td class="px-6 py-4 text-green-400 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                    Activo ahora
+                                </td>
+<td class="px-6 py-4 text-right">
+<button class="text-accent-danger hover:bg-accent-danger/10 px-3 py-1.5 text-xs font-bold rounded-lg border border-accent-danger/30 transition-colors flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[14px]">logout</span>
+                                        Forzar Cierre
+                                    </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-medium text-white">Carlos Diaz</td>
+<td class="px-6 py-4 text-slate-300 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 text-[18px]">smartphone</span>
+                                    App Lumina en Android
+                                </td>
+<td class="px-6 py-4 text-slate-400">Móvil 4G (181.23.44.12)</td>
+<td class="px-6 py-4 text-slate-400">Hace 2 horas</td>
+<td class="px-6 py-4 text-right">
+<button class="text-accent-danger hover:bg-accent-danger/10 px-3 py-1.5 text-xs font-bold rounded-lg border border-accent-danger/30 transition-colors flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[14px]">logout</span>
+                                        Forzar Cierre
+                                    </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-medium text-white">Juan Pérez</td>
+<td class="px-6 py-4 text-slate-300 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 text-[18px]">laptop_mac</span>
+                                    Safari en macOS
+                                </td>
+<td class="px-6 py-4 text-slate-400">Casa (190.11.23.55)</td>
+<td class="px-6 py-4 text-slate-400">Hace 45 min</td>
+<td class="px-6 py-4 text-right">
+<button class="text-accent-danger hover:bg-accent-danger/10 px-3 py-1.5 text-xs font-bold rounded-lg border border-accent-danger/30 transition-colors flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[14px]">logout</span>
+                                        Forzar Cierre
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</body></html>

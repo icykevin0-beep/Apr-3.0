@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#51a9fb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1923",
+                        "sidebar-dark": "#1a1f36",
+                        "glass-dark": "rgba(33, 54, 74, 0.6)",
+                        "glass-border": "rgba(255, 255, 255, 0.08)"
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                    backgroundImage: {
+                        'gradient-blue-purple': 'linear-gradient(135deg, #4facfe 0%, #667eea 100%)',
+                        'gradient-card-1': 'linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(33, 54, 74, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar -->
+<aside class="flex w-72 flex-col bg-[#1a1f36] border-r border-white/5 h-full transition-all duration-300 z-20">
+<div class="p-6 pb-2">
+<div class="flex items-center gap-3 mb-8">
+<div class="flex items-center justify-center size-10 rounded-xl bg-gradient-blue-purple shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined text-white text-2xl">water_drop</span>
+</div>
+<div>
+<h1 class="text-white text-lg font-bold leading-tight tracking-tight">Lumina APR</h1>
+<p class="text-slate-400 text-xs font-medium">Management System</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-[#252b48] mb-6 border border-white/5">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-[#4facfe]" data-alt="Community leader portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAWXm3jLUHGgTAA9Jp0VeF2NrdEJ87IUFs6bT2UvTI9BhF6Dr4pax8gXgf7hIITuUW9jNuK6NcWUhByoidPtcv-9FWd98ZUos1_XyIzn_P2oO0ojaVoe-z2JKWCDrEk1R3Csoz7euJlDNUNnk1Ke_fBTRY-4MH3E5hf6_clB45FMkjkZI0jG23VzzQZIYm2gCdXXSXQHtJhRG-NuLlvf8eTq7AHa8kNRhUrDVhT3Xdr3VZN8xHfFO-iK4vdPVX7weTkkKWHR03Kipo");'></div>
+<div class="flex flex-col overflow-hidden">
+<span class="text-white text-sm font-semibold truncate">APR Villa Los Aromos</span>
+<span class="text-slate-400 text-xs truncate">Admin</span>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 flex flex-col gap-2 overflow-y-auto scrollbar-hide">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-blue-purple text-white shadow-lg shadow-blue-500/20 group transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4facfe] transition-colors">group</span>
+<span class="font-medium text-sm">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4facfe] transition-colors">water_ec</span>
+<span class="font-medium text-sm">Lecturas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4facfe] transition-colors">receipt_long</span>
+<span class="font-medium text-sm">Facturación</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4facfe] transition-colors">bar_chart</span>
+<span class="font-medium text-sm">Reportes</span>
+</a>
+<div class="mt-4 pt-4 border-t border-white/5">
+<p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">System</p>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4facfe] transition-colors">settings</span>
+<span class="font-medium text-sm">Configuración</span>
+</a>
+</div>
+</nav>
+<div class="p-4 mt-auto border-t border-white/5">
+<button class="flex w-full items-center justify-between px-4 py-3 rounded-xl bg-[#252b48] text-slate-300 hover:text-white hover:bg-[#2d3455] transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+<span class="text-sm font-medium">Dark Mode</span>
+</div>
+<div class="relative inline-flex h-5 w-9 items-center rounded-full bg-[#4facfe]">
+<span class="translate-x-5 inline-block h-3 w-3 transform rounded-full bg-white transition"></span>
+</div>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Background Elements -->
+<div class="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#1a1f36] to-transparent pointer-events-none opacity-50 z-0"></div>
+<!-- Header -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-white/5 bg-[#1a1f36]/80 backdrop-blur-md z-10 sticky top-0">
+<div class="flex items-center gap-1 overflow-x-auto scrollbar-hide max-w-2xl">
+<button class="px-4 py-1.5 rounded-lg bg-white/10 text-white text-sm font-medium whitespace-nowrap border border-white/10 hover:bg-white/15 transition-colors">Overview</button>
+<button class="px-4 py-1.5 rounded-lg text-slate-400 text-sm font-medium whitespace-nowrap hover:text-white hover:bg-white/5 transition-colors">Alerts <span class="ml-1 text-xs bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full">3</span></button>
+<button class="px-4 py-1.5 rounded-lg text-slate-400 text-sm font-medium whitespace-nowrap hover:text-white hover:bg-white/5 transition-colors">Maintenance</button>
+<button class="px-4 py-1.5 rounded-lg text-slate-400 text-sm font-medium whitespace-nowrap hover:text-white hover:bg-white/5 transition-colors">Analytics</button>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="pl-10 pr-4 py-2 rounded-lg bg-[#252b48] border-none text-sm text-white placeholder-slate-400 focus:ring-1 focus:ring-[#4facfe] w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+<button class="size-9 flex items-center justify-center rounded-lg bg-[#252b48] text-slate-300 hover:text-white hover:bg-[#2d3455] transition-all relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-[#252b48]"></span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg bg-[#252b48] text-slate-300 hover:text-white hover:bg-[#2d3455] transition-all">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-8 pb-24 scrollbar-hide z-0">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-3xl font-bold text-white tracking-tight">Dashboard</h2>
+<p class="text-slate-400 mt-1 flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                Today, October 24, 2023
+                            </p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#252b48] text-white text-sm font-medium hover:bg-[#2d3455] transition-all border border-white/5">
+<span class="material-symbols-outlined text-sm">download</span>
+                                Export Report
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-blue-purple text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+                                New Entry
+                            </button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:bg-[#252b48]/60 transition-all">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-6xl text-white">groups</span>
+</div>
+<div class="flex flex-col h-full justify-between relative z-10">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-blue-500/20 text-blue-400">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<span class="flex items-center text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">+5% <span class="material-symbols-outlined text-xs ml-0.5">arrow_upward</span></span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Total Socios</p>
+<h3 class="text-3xl font-bold text-white">156</h3>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:bg-[#252b48]/60 transition-all">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-6xl text-white">water_drop</span>
+</div>
+<div class="flex flex-col h-full justify-between relative z-10">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-cyan-500/20 text-cyan-400">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<span class="flex items-center text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">+2.1% <span class="material-symbols-outlined text-xs ml-0.5">arrow_upward</span></span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Consumo Promedio</p>
+<h3 class="text-3xl font-bold text-white">18.5 <span class="text-lg text-slate-500 font-normal">m³</span></h3>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:bg-[#252b48]/60 transition-all">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-6xl text-white">payments</span>
+</div>
+<div class="flex flex-col h-full justify-between relative z-10">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-purple-500/20 text-purple-400">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="flex items-center text-xs font-bold text-rose-400 bg-rose-500/10 px-2 py-1 rounded-full">-1.5% <span class="material-symbols-outlined text-xs ml-0.5">arrow_downward</span></span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Facturado</p>
+<h3 class="text-3xl font-bold text-white">$2.34M</h3>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:bg-[#252b48]/60 transition-all">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-6xl text-white">pending_actions</span>
+</div>
+<div class="flex flex-col h-full justify-between relative z-10">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-amber-500/20 text-amber-400">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<span class="flex items-center text-xs font-bold text-slate-400 bg-slate-500/10 px-2 py-1 rounded-full">0%</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Pagos Pendientes</p>
+<h3 class="text-3xl font-bold text-white">12</h3>
+</div>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Line Chart -->
+<div class="lg:col-span-2 glass-panel p-6 rounded-2xl flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-lg font-bold text-white">Monthly Water Consumption</h3>
+<p class="text-slate-400 text-sm">Overview of m³ consumption per month</p>
+</div>
+<button class="p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex-1 min-h-[250px] w-full relative pt-8">
+<!-- Fake Chart Visualization using CSS/SVG -->
+<div class="absolute inset-0 flex items-end justify-between px-2 gap-2 h-full pb-8">
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
+<div class="w-full h-px bg-white/5"></div>
+<div class="w-full h-px bg-white/5"></div>
+<div class="w-full h-px bg-white/5"></div>
+<div class="w-full h-px bg-white/5"></div>
+<div class="w-full h-px bg-white/5"></div>
+</div>
+<!-- Chart Path (Simulated) -->
+<svg class="absolute inset-0 w-full h-[calc(100%-2rem)] overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4facfe" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#4facfe" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,80 Q10,75 20,60 T40,50 T60,65 T80,40 T100,30" fill="none" stroke="#4facfe" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<path d="M0,80 Q10,75 20,60 T40,50 T60,65 T80,40 T100,30 V100 H0 Z" fill="url(#chartGradient)" stroke="none"></path>
+<!-- Data Points -->
+<circle cx="20" cy="60" fill="#fff" r="1.5"></circle>
+<circle cx="40" cy="50" fill="#fff" r="1.5"></circle>
+<circle cx="60" cy="65" fill="#fff" r="1.5"></circle>
+<circle cx="80" cy="40" fill="#fff" r="1.5"></circle>
+</svg>
+<!-- X-Axis Labels -->
+<div class="absolute bottom-0 w-full flex justify-between text-xs text-slate-500 font-medium px-2">
+<span>May</span>
+<span>Jun</span>
+<span>Jul</span>
+<span>Aug</span>
+<span>Sep</span>
+<span>Oct</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Doughnut Chart -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-lg font-bold text-white">Bracket Distribution</h3>
+<p class="text-slate-400 text-sm">Socios by consumption tier</p>
+</div>
+</div>
+<div class="flex-1 flex items-center justify-center relative min-h-[220px]">
+<!-- Donut Chart CSS -->
+<div class="relative size-48 rounded-full" style="background: conic-gradient(#4facfe 0% 35%, #667eea 35% 60%, #a78bfa 60% 85%, #2dd4bf 85% 100%);">
+<div class="absolute inset-2 bg-[#171c2c] rounded-full flex items-center justify-center flex-col">
+<span class="text-3xl font-bold text-white">156</span>
+<span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Total</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-4">
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-[#4facfe]"></span>
+<span class="text-sm text-slate-300">Low (35%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-[#667eea]"></span>
+<span class="text-sm text-slate-300">Medium (25%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-[#a78bfa]"></span>
+<span class="text-sm text-slate-300">High (25%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-[#2dd4bf]"></span>
+<span class="text-sm text-slate-300">Ind. (15%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Table -->
+<div class="glass-panel rounded-2xl overflow-hidden">
+<div class="p-6 border-b border-white/5 flex items-center justify-between">
+<h3 class="text-lg font-bold text-white">Actividad Reciente</h3>
+<a class="text-sm text-[#4facfe] hover:text-blue-300 font-medium transition-colors" href="#">View All</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-slate-400">
+<thead class="bg-white/5 text-xs uppercase font-semibold text-slate-300">
+<tr>
+<th class="px-6 py-4">Socio</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Date</th>
+<th class="px-6 py-4">Amount / Reading</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-700 bg-center bg-cover" data-alt="User avatar 1" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBDgfxxxLHa53olaaCjgL4DXv7LJHovqxpSaiKFoKTZCVM1CA8mcTAaiOkHbdtp0ErydRfV7-7rxzTX9J3iY2qj2MEQxReXes-WETN-S44RDFK2t49W_-L7C-ZJRL-IRXPZHjB30vtTCd59BLln4yYV4OBvGyS290jNNFL5H4NRNKEFH2ES5yu23gmN1sEO9ncNIRtwrdD1ycJV73f2d-4eXoXxtjhhvOpf5np5KhYV_THIDt9cJ3xYj13ilpx4x-5RvpmeObrUCs0")'></div>
+                                            Juan Pérez
+                                        </td>
+<td class="px-6 py-4">Pago Mensual</td>
+<td class="px-6 py-4">Oct 24, 2023</td>
+<td class="px-6 py-4 text-white font-medium">$15.000</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400">Completed</span></td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-white transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-700 bg-center bg-cover" data-alt="User avatar 2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBuqS5MotQoEJj9oK8GQAElMq8HSiItoUyU1N1GM-qfblbdlQGUd1ldeJbVS4OmQ05XXFnYza0Cg2pEad-7n8tjfi5sZJp2GVCuPnve6rgeWRMM9QB38Eef6au9jRpo5fKk__yimohVTnIlAZY_Xclu0Em2V1pyywKkP6f_3xtZtKzbJOjClgJTlnoyV34t2hB8KLHicOAXYvIbO7NHF79pNbwXd-QbExJ7f_BbHwlsFNBkm-R1AdNIb6jmLzIltlXpPc-L_d0FpN8")'></div>
+                                            Maria Gonzalez
+                                        </td>
+<td class="px-6 py-4">Nueva Lectura</td>
+<td class="px-6 py-4">Oct 23, 2023</td>
+<td class="px-6 py-4 text-white font-medium">22 m³</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400">Recorded</span></td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-white transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-700 bg-center bg-cover" data-alt="User avatar 3" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHTHHiGwvy0SR3x_AV23-100Y0poYTl2uWvzAwx2E-rPSVQ5BaQfyL61P81g3VnJ5R3mouipl01YNVMT_y4ERnwvgFnePAU9M6taJxAyso-8JNIb-Pvgnlbr7Uq0_aCqy5h1ocUo88fAMtS6sltKJ5BUQp6hhPM0fCWBFAk8bRJX6H27vyvrjkMXU5xaUgJQoZ2aX7-7eT5nIqYpywT2_xI3SWu5ANmQCvYblTDiMTW1Hkm8CmUjofCLApg0g-36EvFv7_xTp1iX0")'></div>
+                                            Carlos Ruiz
+                                        </td>
+<td class="px-6 py-4">Reporte Fuga</td>
+<td class="px-6 py-4">Oct 23, 2023</td>
+<td class="px-6 py-4 text-white font-medium">-</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400">Pending</span></td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-white transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-700 bg-center bg-cover" data-alt="User avatar 4" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAewNDVkquAKwlLPsUYLUO_btKD4rdOmbESXSdoZvmkSuAbGxwIyjGkaA50n9N0vrGo--h1TkYoPoTeknhHg5d1qIeSiawQKC_fiGLegsQ6d85JzFENRcrbIwkXLtcT2bpcxEdzvsr6QjzNff5S_voOiBjQtRtudQdwzu7eWhHI2AqDFfGbayPG06y04vOI8e5jln8bUs8s9Tbsw_iEYgfXc2uU0cdLPQBPJA4MNhinQJJ94f-IzW3w5UQiM70Rrzdw6EXgQWGbxhM")'></div>
+                                            Ana Lopez
+                                        </td>
+<td class="px-6 py-4">Pago Mensual</td>
+<td class="px-6 py-4">Oct 22, 2023</td>
+<td class="px-6 py-4 text-white font-medium">$12.500</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400">Completed</span></td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-white transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

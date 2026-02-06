@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR - Lecturas de Medidores</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3d3df5",
+                        "background-light": "#f5f5f8",
+                        "background-dark": "#101022",
+                        "sidebar-dark": "#1a1f36",
+                        "card-dark": "#222249",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem", 
+                        "xl": "0.75rem", // Adjusted to 12px per request
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1f36; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3d3df5; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5b5bf5; 
+        }
+        
+        .glass-panel {
+            background: rgba(26, 31, 54, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen flex">
+<!-- Sidebar -->
+<aside class="w-64 bg-sidebar-dark border-r border-white/5 flex flex-col justify-between shrink-0 z-20">
+<div>
+<!-- Logo Area -->
+<div class="h-16 flex items-center px-6 border-b border-white/5">
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-tight tracking-wide">Lumina APR</h1>
+<p class="text-[#9090cb] text-xs font-medium">Gestión Rural</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2 p-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#9090cb] hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">bar_chart</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#9090cb] hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">groups</span>
+<span class="text-sm font-medium">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-primary fill-1">receipt_long</span>
+<span class="text-sm font-medium">Lecturas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#9090cb] hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">payments</span>
+<span class="text-sm font-medium">Pagos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#9090cb] hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">water_drop</span>
+<span class="text-sm font-medium">Consumo</span>
+</a>
+</nav>
+</div>
+<div class="p-4 border-t border-white/5">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#9090cb] hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Configuración</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-3">
+<div class="size-8 rounded-full bg-cover bg-center ring-2 ring-white/10" data-alt="User profile picture placeholder" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCiJp1Ejo2Q2k5mMl1n8Bh5LrGXK5CIOafufBzw0NgniDecfeQNoMd91ytxQmdfXvkJii9VAXLQvohqsb7QQMIw_cO2vrgIMCJBAKD5ls99ZIXPAx97pegqesb6gt3f0NSPVGmKcMZXkres8bXAwL6zHh_rvFkMI7rR1yQDrIXunFeKJxw9VNchhCMBacvpqfOFhWe07xyiiLje9sXzCENw-e55wcI-SE6DQ__lVn11jqSebSGhhgINYrghzxF0z_c-BZw1nWmxFig');"></div>
+<div class="flex flex-col">
+<span class="text-sm text-white font-medium">Admin User</span>
+<span class="text-xs text-[#9090cb]">admin@lumina.apr</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col min-w-0 relative">
+<!-- Top Header -->
+<header class="h-16 border-b border-white/5 bg-background-dark/50 backdrop-blur-sm flex items-center justify-between px-8 sticky top-0 z-10">
+<!-- Breadcrumb / Page Title Context -->
+<div class="flex items-center gap-2 text-white/50 text-sm">
+<span class="material-symbols-outlined text-[20px]">home</span>
+<span>/</span>
+<span class="text-white font-medium">Lecturas de Medidores</span>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-4">
+<!-- Search -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[#9090cb]">search</span>
+</div>
+<input class="bg-card-dark text-white text-sm rounded-xl pl-10 pr-4 py-2 border-none ring-1 ring-white/5 focus:ring-primary w-64 placeholder-[#9090cb] transition-all" placeholder="Buscar socio, medidor..." type="text"/>
+</div>
+<!-- Notifications -->
+<button class="relative p-2 text-[#9090cb] hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-background-dark"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto p-8 pb-20">
+<div class="max-w-7xl mx-auto flex flex-col gap-6">
+<!-- Module Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-bold text-white flex items-center gap-2">
+<span class="text-3xl">📈</span> Lecturas de Medidores
+                        </h2>
+<p class="text-[#9090cb] text-sm mt-1">Gestión del ciclo de facturación actual</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-card-dark text-white text-sm font-bold hover:bg-[#2c2c5e] transition-colors ring-1 ring-white/5">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+                            Importar Masivo
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            Nueva Lectura
+                        </button>
+</div>
+</div>
+<!-- Period & Progress Card -->
+<div class="bg-card-dark rounded-xl p-6 ring-1 ring-white/5 flex flex-col md:flex-row items-end md:items-center justify-between gap-6">
+<div class="flex-1 w-full md:w-auto">
+<label class="text-[#9090cb] text-xs font-bold uppercase tracking-wider mb-2 block">Período de Facturación</label>
+<div class="flex gap-3">
+<div class="relative inline-block w-64">
+<select class="block w-full rounded-xl bg-[#1a1f36] border-none text-white py-2.5 pl-4 pr-10 focus:ring-2 focus:ring-primary sm:text-sm font-medium appearance-none cursor-pointer">
+<option>Febrero 2026</option>
+<option>Enero 2026</option>
+<option>Diciembre 2025</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+<button class="bg-primary/20 text-primary hover:bg-primary/30 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                                Procesar Período
+                            </button>
+</div>
+</div>
+<div class="flex-1 w-full md:max-w-md flex flex-col gap-2">
+<div class="flex justify-between text-sm">
+<span class="text-white font-medium">Progreso de Registro</span>
+<span class="text-primary font-bold">29%</span>
+</div>
+<div class="w-full bg-[#1a1f36] rounded-full h-2.5 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-purple-500 h-2.5 rounded-full" style="width: 29%"></div>
+</div>
+<p class="text-[#9090cb] text-xs text-right">45/156 lecturas registradas</p>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Pending -->
+<div class="bg-card-dark rounded-xl p-5 ring-1 ring-white/5 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-orange-500">schedule</span>
+</div>
+<div class="flex items-center gap-3 mb-2">
+<div class="p-2 rounded-lg bg-orange-500/20 text-orange-400">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<h3 class="text-[#9090cb] text-sm font-medium">Lecturas Pendientes</h3>
+</div>
+<p class="text-3xl font-bold text-white pl-1">111</p>
+</div>
+<!-- Completed -->
+<div class="bg-card-dark rounded-xl p-5 ring-1 ring-white/5 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-emerald-500">check_circle</span>
+</div>
+<div class="flex items-center gap-3 mb-2">
+<div class="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<h3 class="text-[#9090cb] text-sm font-medium">Completadas</h3>
+</div>
+<p class="text-3xl font-bold text-white pl-1">45</p>
+</div>
+<!-- Total Consumption -->
+<div class="bg-card-dark rounded-xl p-5 ring-1 ring-white/5 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-blue-500">water_drop</span>
+</div>
+<div class="flex items-center gap-3 mb-2">
+<div class="p-2 rounded-lg bg-blue-500/20 text-blue-400">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<h3 class="text-[#9090cb] text-sm font-medium">Consumo Total</h3>
+</div>
+<p class="text-3xl font-bold text-white pl-1">2,450 <span class="text-lg text-[#9090cb] font-normal">m³</span></p>
+</div>
+</div>
+<!-- Main Table -->
+<div class="flex flex-col gap-4">
+<h3 class="text-white text-lg font-bold">Socios sin Lectura</h3>
+<div class="bg-card-dark rounded-xl ring-1 ring-white/5 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-white/5 bg-white/5 text-xs uppercase tracking-wider text-[#9090cb]">
+<th class="p-4 font-bold">RUT</th>
+<th class="p-4 font-bold">Socio</th>
+<th class="p-4 font-bold">Medidor</th>
+<th class="p-4 font-bold">Última Lectura (Ene)</th>
+<th class="p-4 font-bold">Consumo Prom.</th>
+<th class="p-4 font-bold text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="p-4 text-white font-mono">12.345.678-9</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white">JP</div>
+<div class="flex flex-col">
+<span class="text-white font-medium">Juan Pérez</span>
+<span class="text-xs text-orange-400 flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-orange-400"></span> Pendiente
+                                                </span>
+</div>
+</div>
+</td>
+<td class="p-4 text-[#9090cb]">M-2023-001</td>
+<td class="p-4 text-white">1,523 m³</td>
+<td class="p-4 text-white">12 m³</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:text-white hover:bg-primary px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-primary/30 hover:border-primary">
+                                            Registrar
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="p-4 text-white font-mono">15.678.901-2</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-xs font-bold text-white">ML</div>
+<div class="flex flex-col">
+<span class="text-white font-medium">María López</span>
+<span class="text-xs text-orange-400 flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-orange-400"></span> Pendiente
+                                                </span>
+</div>
+</div>
+</td>
+<td class="p-4 text-[#9090cb]">M-2023-045</td>
+<td class="p-4 text-white">2,100 m³</td>
+<td class="p-4 text-white">15 m³</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:text-white hover:bg-primary px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-primary/30 hover:border-primary">
+                                            Registrar
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="p-4 text-white font-mono">9.876.543-K</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-xs font-bold text-white">CR</div>
+<div class="flex flex-col">
+<span class="text-white font-medium">Carlos Ruiz</span>
+<span class="text-xs text-orange-400 flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-orange-400"></span> Pendiente
+                                                </span>
+</div>
+</div>
+</td>
+<td class="p-4 text-[#9090cb]">M-2022-112</td>
+<td class="p-4 text-white">980 m³</td>
+<td class="p-4 text-white">10 m³</td>
+<td class="p-4 text-right">
+<button class="text-primary hover:text-white hover:bg-primary px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-primary/30 hover:border-primary">
+                                            Registrar
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Slide-over Modal Overlay (Background Dimmer) -->
+<div class="absolute inset-0 bg-black/40 backdrop-blur-sm z-30"></div>
+<!-- Lateral Slide-over Modal -->
+<div class="absolute top-0 right-0 h-full w-[440px] glass-panel z-40 shadow-2xl flex flex-col transform transition-transform duration-300">
+<!-- Modal Header -->
+<div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#1a1f36]">
+<div>
+<h3 class="text-lg font-bold text-white">Registrar Lectura</h3>
+<p class="text-xs text-[#9090cb]">Ingreso manual de datos</p>
+</div>
+<button class="text-[#9090cb] hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Scrollable Modal Content -->
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- Socio Info Card -->
+<div class="flex items-center gap-4 bg-card-dark p-4 rounded-xl border border-white/5">
+<div class="size-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-base font-bold text-white shadow-lg">JP</div>
+<div>
+<h4 class="text-white font-bold text-base">Juan Pérez</h4>
+<p class="text-xs text-[#9090cb]">Medidor: <span class="text-white font-mono">M-2023-001</span></p>
+</div>
+</div>
+<!-- Form -->
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-1">
+<label class="text-xs font-bold text-[#9090cb] uppercase tracking-wider">Lectura Anterior (Ene)</label>
+<div class="flex items-center bg-[#181834] rounded-xl border border-white/5 px-4 h-12">
+<span class="material-symbols-outlined text-[#9090cb] mr-3">history</span>
+<input class="bg-transparent border-none text-white/50 w-full focus:ring-0 cursor-not-allowed font-mono text-lg" disabled="" readonly="" type="text" value="1523"/>
+<span class="text-[#9090cb] text-sm font-medium">m³</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-xs font-bold text-primary uppercase tracking-wider">Lectura Actual</label>
+<div class="flex items-center bg-[#222249] rounded-xl border border-primary/50 px-4 h-14 ring-4 ring-primary/10 transition-all">
+<span class="material-symbols-outlined text-primary mr-3">speed</span>
+<input autofocus="" class="bg-transparent border-none text-white w-full focus:ring-0 font-mono text-2xl font-bold placeholder-white/20" type="number" value="1541"/>
+<span class="text-white text-sm font-medium">m³</span>
+</div>
+</div>
+<!-- Calculation Result -->
+<div class="flex justify-between items-center bg-[#181834] p-4 rounded-xl border border-white/5">
+<span class="text-[#9090cb] text-sm font-medium">Consumo Calculado</span>
+<span class="text-2xl font-bold text-white">18 <span class="text-sm font-normal text-[#9090cb]">m³</span></span>
+</div>
+<!-- Alert -->
+<div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-yellow-500 mt-0.5">warning</span>
+<div class="flex flex-col">
+<span class="text-yellow-500 font-bold text-sm">Consumo Elevado</span>
+<p class="text-yellow-200/70 text-xs leading-relaxed">Este consumo es un <strong>50% mayor</strong> al promedio histórico del socio (12 m³).</p>
+</div>
+</div>
+</div>
+<!-- Historical Chart -->
+<div class="flex flex-col gap-2 mt-2">
+<h4 class="text-xs font-bold text-[#9090cb] uppercase tracking-wider">Historial de Consumo (6 meses)</h4>
+<div class="bg-[#181834] rounded-xl p-4 h-40 flex items-end justify-between gap-2 border border-white/5">
+<!-- Bar Sep -->
+<div class="flex flex-col items-center gap-1 w-full group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%] group-hover:bg-primary/40 transition-colors relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">10</span>
+</div>
+<span class="text-[10px] text-[#9090cb]">Sep</span>
+</div>
+<!-- Bar Oct -->
+<div class="flex flex-col items-center gap-1 w-full group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[45%] group-hover:bg-primary/40 transition-colors relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">11</span>
+</div>
+<span class="text-[10px] text-[#9090cb]">Oct</span>
+</div>
+<!-- Bar Nov -->
+<div class="flex flex-col items-center gap-1 w-full group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[50%] group-hover:bg-primary/40 transition-colors relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">12</span>
+</div>
+<span class="text-[10px] text-[#9090cb]">Nov</span>
+</div>
+<!-- Bar Dic -->
+<div class="flex flex-col items-center gap-1 w-full group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[55%] group-hover:bg-primary/40 transition-colors relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">13</span>
+</div>
+<span class="text-[10px] text-[#9090cb]">Dic</span>
+</div>
+<!-- Bar Ene -->
+<div class="flex flex-col items-center gap-1 w-full group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[48%] group-hover:bg-primary/40 transition-colors relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">12</span>
+</div>
+<span class="text-[10px] text-[#9090cb]">Ene</span>
+</div>
+<!-- Bar Feb (Current) -->
+<div class="flex flex-col items-center gap-1 w-full">
+<div class="w-full bg-yellow-500 rounded-t-sm h-[75%] shadow-[0_0_10px_rgba(234,179,8,0.3)] relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-yellow-500 font-bold">18</span>
+</div>
+<span class="text-[10px] text-white font-bold">Feb</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 border-t border-white/10 bg-[#1a1f36] flex gap-3">
+<button class="flex-1 py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:bg-white/5 transition-colors">
+                    Cancelar
+                </button>
+<button class="flex-1 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25">
+                    Guardar Lectura
+                </button>
+</div>
+</div>
+</div>
+</body></html>

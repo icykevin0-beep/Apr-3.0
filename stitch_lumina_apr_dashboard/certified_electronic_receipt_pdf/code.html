@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR - Boleta Electrónica</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2590f4",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Specific print styles to ensure the PDF looks correct when actually printed */
+        @media print {
+            body { background: white; }
+            .no-print { display: none !important; }
+            .print-container { box-shadow: none; margin: 0; width: 100%; max-width: 100%; }
+        }
+        .sii-box-border {
+            border: 3px solid #dc2626; /* Red-600 */
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 flex flex-col items-center min-h-screen pb-10">
+<!-- Top Action Bar -->
+<div class="w-full bg-white dark:bg-[#1a2632] shadow-sm border-b border-slate-200 dark:border-slate-800 p-4 sticky top-0 z-50 no-print">
+<div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div>
+<h1 class="text-lg font-bold">Vista Previa: Boleta #000542</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400">Generado el 28 de Febrero, 2026</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                    Descargar PDF
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                    Imprimir
+                </button>
+</div>
+</div>
+</div>
+<!-- Document Container (A4 Aspect Ratio Simulation) -->
+<!-- Note: We force bg-white and text-black inside the document to simulate paper regardless of dark mode preference -->
+<main class="print-container relative w-full max-w-[21cm] bg-white text-black shadow-2xl mt-8 mx-auto p-8 md:p-12 box-border">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row justify-between gap-8 mb-8 border-b border-slate-200 pb-8">
+<!-- Left: Company Info -->
+<div class="flex flex-col justify-start gap-4 max-w-sm">
+<div class="w-32 h-32 bg-slate-100 rounded-lg flex items-center justify-center mb-2 overflow-hidden bg-cover bg-center" data-alt="Abstract water ripple pattern representing Lumina APR logo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDFh6M2x3Zo8eMGm7pM2D1RvoOYBJcC4gW0pL3FE9RBCdRfM_-Y_lJtAlavi4hZw_ThHmwMSpPScXwWicpa7syhU4oQv0-IX_QDckI_VN-mM6VABL9Xh6aVWVX3s2U4d4Z9e7FuhXEqppI83L7mUDXjBDvdmfXRsOkQbO3-mHjxDcgZnEeS97e2tKY18aiclehg3EBr4s7hqPNWFNCdiRopP_QVxdZmm2aX82s7bAHyztbXatZ6HqsRWaYNdM1YAg74IsaRM7gzfgQ');">
+</div>
+<div>
+<h2 class="text-3xl font-black tracking-tight text-primary">Lumina APR</h2>
+<p class="text-sm font-bold text-slate-800 mt-1">COMITÉ DE AGUA POTABLE RURAL</p>
+<div class="text-sm text-slate-600 mt-2 space-y-1">
+<p>RUT: 65.432.100-K</p>
+<p>Av. Principal 123, Comuna de Santiago</p>
+<p>Giro: Captación, tratamiento y distribución de agua</p>
+<p>Fono: +56 2 2345 6789 | contacto@luminaapr.cl</p>
+</div>
+</div>
+</div>
+<!-- Right: SII Red Box -->
+<div class="w-full md:w-[280px] shrink-0">
+<div class="sii-box-border p-4 text-center">
+<p class="text-[#dc2626] font-bold text-lg uppercase tracking-wide leading-tight">R.U.T.: 76.000.000-1</p>
+<div class="my-2 py-1 bg-[#dc2626] text-white font-bold text-xl uppercase tracking-wider">
+                        Boleta Electrónica
+                    </div>
+<p class="text-[#dc2626] font-bold text-xl uppercase tracking-wide leading-tight">Nº 000542</p>
+</div>
+<div class="text-center mt-2">
+<p class="text-xs text-[#dc2626] font-medium">S.I.I. - SANTIAGO CENTRO</p>
+</div>
+</div>
+</header>
+<!-- Customer Info Section -->
+<section class="mb-8 border border-slate-300 rounded-lg overflow-hidden">
+<div class="bg-slate-100 px-6 py-2 border-b border-slate-300">
+<h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Datos del Cliente</h3>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 font-medium uppercase">Señor(a)</span>
+<span class="text-base font-bold text-slate-900">Juan Pérez</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 font-medium uppercase">RUT</span>
+<span class="text-base font-bold text-slate-900">12.345.678-9</span>
+</div>
+<div class="flex flex-col md:col-span-2">
+<span class="text-xs text-slate-500 font-medium uppercase">Dirección</span>
+<span class="text-base font-medium text-slate-900">Calle Los Alerces 456, Parcela 22, Sector Norte</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 font-medium uppercase">Número de Medidor</span>
+<span class="text-base font-medium text-slate-900 font-mono">123456-M</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 font-medium uppercase">Periodo de Lectura</span>
+<span class="text-base font-bold text-slate-900">Febrero 2026</span>
+</div>
+</div>
+</section>
+<!-- Consumption Table -->
+<section class="mb-8">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="bg-slate-800 text-white">
+<th class="px-4 py-3 font-semibold rounded-tl-lg">Concepto</th>
+<th class="px-4 py-3 font-semibold text-center">Lectura Ant.</th>
+<th class="px-4 py-3 font-semibold text-center">Lectura Act.</th>
+<th class="px-4 py-3 font-semibold text-center">Consumo (m³)</th>
+<th class="px-4 py-3 font-semibold text-right rounded-tr-lg">Valor ($)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 border border-slate-200 border-t-0">
+<!-- Row 1 -->
+<tr>
+<td class="px-4 py-4 font-medium text-slate-900">Cargo Fijo Mensual</td>
+<td class="px-4 py-4 text-center text-slate-500">-</td>
+<td class="px-4 py-4 text-center text-slate-500">-</td>
+<td class="px-4 py-4 text-center text-slate-500">-</td>
+<td class="px-4 py-4 text-right font-medium text-slate-900">2.500</td>
+</tr>
+<!-- Row 2 -->
+<tr>
+<td class="px-4 py-4 font-medium text-slate-900">Consumo Agua Potable (Tramo 1)</td>
+<td class="px-4 py-4 text-center text-slate-600 font-mono">1450</td>
+<td class="px-4 py-4 text-center text-slate-600 font-mono">1465</td>
+<td class="px-4 py-4 text-center text-slate-900 font-bold">15</td>
+<td class="px-4 py-4 text-right font-medium text-slate-900">12.750</td>
+</tr>
+<!-- Row 3 -->
+<tr>
+<td class="px-4 py-4 font-medium text-slate-900">Alcantarillado</td>
+<td class="px-4 py-4 text-center text-slate-500">-</td>
+<td class="px-4 py-4 text-center text-slate-500">-</td>
+<td class="px-4 py-4 text-center text-slate-900">15</td>
+<td class="px-4 py-4 text-right font-medium text-slate-900">4.500</td>
+</tr>
+<!-- Empty rows for spacing aesthetics -->
+<tr class="h-24">
+<td colspan="5"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- Summary & Totals -->
+<section class="flex flex-col md:flex-row gap-8 mb-12">
+<!-- Left Side: Message -->
+<div class="flex-1">
+<div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">info</span>
+<div>
+<p class="text-sm font-bold text-primary mb-1">Información Importante</p>
+<p class="text-xs text-slate-600 leading-relaxed">
+                                Recuerde que el corte por no pago se realiza después de 2 meses de deuda acumulada. 
+                                La próxima lectura está programada para el 28/03/2026.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Totals -->
+<div class="w-full md:w-80">
+<div class="flex justify-between py-2 border-b border-slate-100">
+<span class="text-slate-600 font-medium">Monto Neto</span>
+<span class="text-slate-900 font-medium">$ 16.597</span>
+</div>
+<div class="flex justify-between py-2 border-b border-slate-100">
+<span class="text-slate-600 font-medium">IVA (19%)</span>
+<span class="text-slate-900 font-medium">$ 3.153</span>
+</div>
+<div class="flex justify-between py-2 border-b border-slate-100">
+<span class="text-slate-600 font-medium">Otros Cargos</span>
+<span class="text-slate-900 font-medium">$ 0</span>
+</div>
+<div class="flex justify-between py-4 mt-2 bg-slate-50 px-4 rounded-lg border border-slate-200">
+<span class="text-slate-900 font-bold text-lg">TOTAL A PAGAR</span>
+<span class="text-slate-900 font-black text-xl">$ 19.750</span>
+</div>
+</div>
+</section>
+<!-- Footer / Timbre SII -->
+<footer class="mt-auto pt-8 border-t border-slate-200">
+<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+<!-- Timbre Electrónico -->
+<div class="flex flex-col items-center">
+<!-- PDF417 Barcode Placeholder -->
+<div aria-label="Timbre Electrónico SII PDF417 Barcode" class="w-64 h-24 bg-slate-900 mb-2 relative overflow-hidden" role="img" style="background-image: url('data:image/svg+xml,%3Csvg width=\'100%25\' height=\'100%25\' viewBox=\'0 0 100 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath fill=\'%23000000\' d=\'M0 0h100v40H0z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M2 2h2v36H2zm4 0h1v36H6zm3 0h3v36H9zm5 0h1v36h-1zm3 0h2v36h-2zm4 0h1v36h-1zm3 0h3v36h-3zm5 0h1v36h-1zm3 0h2v36h-2zm4 0h1v36h-1zm3 0h3v36h-3zm5 0h1v36h-1zm3 0h2v36h-2zm4 0h1v36h-1zm3 0h3v36h-3zm5 0h1v36h-1zm3 0h2v36h-2zm4 0h1v36h-1zm3 0h3v36h-3zm5 0h1v36h-1zm3 0h2v36h-2zm4 0h1v36h-1zm3 0h3v36h-3zm5 0h1v36h-1z\'/%3E%3C/svg%3E'); background-size: cover;">
+<!-- Abstract representation of PDF417 -->
+</div>
+<p class="text-xs text-center font-bold text-slate-700">Timbre Electrónico SII</p>
+<p class="text-[10px] text-center text-slate-500">Res. 80 de 2014 - Verifique documento: www.sii.cl</p>
+</div>
+<!-- Footer Text -->
+<div class="flex flex-col items-center md:items-end">
+<p class="text-sm font-semibold text-primary mb-1">¡Gracias por cuidar el agua!</p>
+<p class="text-xs text-slate-400">Este documento ha sido generado electrónicamente.</p>
+<div class="flex gap-2 mt-2">
+<span class="material-symbols-outlined text-slate-300">water_drop</span>
+<span class="material-symbols-outlined text-slate-300">recycling</span>
+<span class="material-symbols-outlined text-slate-300">eco</span>
+</div>
+</div>
+</div>
+</footer>
+</main>
+<div class="h-10"></div>
+</body></html>

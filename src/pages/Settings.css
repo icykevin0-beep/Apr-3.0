@@ -1,0 +1,425 @@
+/* Settings Page - Exact Stitch Design */
+
+.settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 72rem;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.025em;
+}
+
+.title-emoji {
+    font-size: 2rem;
+}
+
+.page-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+    max-width: 40rem;
+}
+
+/* Section Cards */
+.settings-section {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-header h2,
+.settings-section>h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.settings-section>h2 {
+    padding: 1.25rem 1.5rem 0;
+}
+
+.section-icon {
+    color: #6b3df5;
+    font-size: 1.25rem;
+}
+
+.section-desc {
+    padding: 0 1.5rem;
+    margin: 0.5rem 0 1.5rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #6b3df5;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: rgba(107, 61, 245, 0.9);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary.small .material-symbols-outlined,
+.btn-secondary.small .material-symbols-outlined {
+    font-size: 1.125rem;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem 2rem;
+    padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748b;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+}
+
+/* Tariffs Table */
+.tariffs-table {
+    overflow-x: auto;
+}
+
+.tariffs-header-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+}
+
+.tariff-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.tariff-row:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tariff-name {
+    font-weight: 500;
+    color: white;
+}
+
+.tariff-value {
+    color: #94a3b8;
+}
+
+.tariff-price {
+    font-weight: 700;
+    color: #6b3df5;
+    font-family: ui-monospace, monospace;
+}
+
+.right {
+    text-align: right;
+}
+
+.edit-btn {
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.edit-btn:hover {
+    color: #6b3df5;
+}
+
+.edit-btn .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+.add-tariff-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    margin: 1rem 1.5rem;
+    margin-right: 1.5rem;
+    width: calc(100% - 3rem);
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-tariff-btn:hover {
+    color: #6b3df5;
+    border-color: #6b3df5;
+    background: rgba(107, 61, 245, 0.05);
+}
+
+/* Two Column Layout */
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .two-column {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Preferences */
+.preferences-list {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.preference-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.preference-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.preference-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+}
+
+.preference-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 1.5rem 0;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    width: 3rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    background: #475569;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0.25rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.toggle-switch.active {
+    background: #6b3df5;
+    justify-content: flex-end;
+}
+
+.toggle-knob {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Data Actions */
+.data-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.data-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.data-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.data-btn.danger {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    margin-top: 0.5rem;
+}
+
+.data-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+/* Footer */
+.settings-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 768px) {
+    .settings-footer {
+        flex-direction: row;
+    }
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.separator {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .separator {
+        display: inline;
+    }
+}
+
+.footer-left .highlight {
+    color: #6b3df5;
+    font-weight: 500;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.footer-right a {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    transition: color 0.2s;
+}
+
+.footer-right a:hover {
+    color: white;
+}

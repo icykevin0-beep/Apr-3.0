@@ -1,0 +1,190 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import './Login.css'
+
+export default function Login() {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [rememberMe, setRememberMe] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
+
+    const { login } = useAuth()
+    const navigate = useNavigate()
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setLoading(true)
+        setError('')
+
+        try {
+            await login(email, password)
+            navigate('/')
+        } catch (err) {
+            setError('Credenciales inválidas')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return (
+        <div className="login-container">
+            {/* Left Side: Login Form */}
+            <div className="login-left">
+                {/* Abstract decorations */}
+                <div className="login-decorations">
+                    <div className="decoration-blob top"></div>
+                    <div className="decoration-blob bottom"></div>
+                </div>
+
+                {/* Glass Card */}
+                <div className="login-card">
+                    {/* Header */}
+                    <div className="login-header">
+                        <div className="login-logo">
+                            <span className="material-symbols-outlined">water_drop</span>
+                        </div>
+                        <h1>Lumina APR</h1>
+                        <p>Sistema de Gestión de Agua Potable Rural</p>
+                    </div>
+
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="login-form">
+                        {error && <div className="login-error">{error}</div>}
+
+                        {/* Email Input */}
+                        <div className="form-group">
+                            <label className="form-label">Email o RUT</label>
+                            <div className="input-wrapper">
+                                <span className="material-symbols-outlined input-icon">person</span>
+                                <input
+                                    type="text"
+                                    placeholder="ejemplo@lumina.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        {/* Password Input */}
+                        <div className="form-group">
+                            <label className="form-label">Contraseña</label>
+                            <div className="input-wrapper">
+                                <span className="material-symbols-outlined input-icon">lock</span>
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="toggle-password"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    <span className="material-symbols-outlined">
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Options */}
+                        <div className="form-options">
+                            <label className="checkbox-wrapper">
+                                <input
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                />
+                                <span>Recordarme</span>
+                            </label>
+                            <a href="#" className="forgot-link">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        {/* Submit Button */}
+                        <button type="submit" className="login-btn" disabled={loading}>
+                            {loading ? 'Ingresando...' : 'Iniciar Sesión'}
+                        </button>
+                    </form>
+
+                    {/* Divider */}
+                    <div className="login-divider">
+                        <span>O continúa con</span>
+                    </div>
+
+                    {/* Social Login */}
+                    <div className="social-buttons">
+                        <button className="social-btn">
+                            <svg className="social-icon" viewBox="0 0 24 24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                            </svg>
+                            <span>Google</span>
+                        </button>
+                        <button className="social-btn">
+                            <svg className="social-icon" viewBox="0 0 23 23">
+                                <path d="M0 0h11v11H0zM12 0h11v11H12zM0 12h11v11H0zM12 12h11v11H12z" fill="#f3f3f3" />
+                            </svg>
+                            <span>Microsoft</span>
+                        </button>
+                    </div>
+
+                    {/* Footer Text */}
+                    <div className="login-footer">
+                        <p>¿No tienes cuenta? <a href="#">Solicitar Acceso</a></p>
+                        <p className="copyright">© 2026 Lumina APR. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Side: Visual Image (Desktop only) */}
+            <div className="login-right">
+                <div
+                    className="login-image"
+                    style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVweetBdOd7Rb4C2tlsQ5MZnBDFPMftFGCmTsdati9WagZAWka-wE6Sq9vp9mxGD5VGejvXGNLdFuiYOb67qUhPQ4fVnPuN7l-6YAeMY1WVcnEv8DwatcuPgl57qk9Xj4vkROI62YIyO66hpTPiakIJQA1ryy2-zmnR3fKEABEDr7-vVDvWyUl-Hnv-NxF5moXlGtHQgYr-k2bQPt2y6Q_5I1zwZ-fRAY5jE8qA-WpzDHLhkkJyuFO4V45AmT6GhokBgSFKCRj9O4")' }}
+                ></div>
+                <div className="login-overlay gradient"></div>
+                <div className="login-overlay primary"></div>
+
+                <div className="login-hero">
+                    <div className="hero-content">
+                        <div className="hero-badge">
+                            <span className="badge-dot"></span>
+                            <span>Plataforma Segura</span>
+                        </div>
+                        <h2>
+                            Gestiona tu APR <br />
+                            <span className="gradient-text">de forma inteligente</span>
+                        </h2>
+                        <p>
+                            Controla el consumo, facturación y mantenimiento de tu red de agua potable rural en una sola plataforma unificada y moderna.
+                        </p>
+
+                        {/* Feature pills */}
+                        <div className="hero-features">
+                            <div className="feature-pill">
+                                <span className="material-symbols-outlined">monitoring</span>
+                                <span>Monitoreo Real</span>
+                            </div>
+                            <div className="feature-pill">
+                                <span className="material-symbols-outlined">payments</span>
+                                <span>Pagos Fáciles</span>
+                            </div>
+                            <div className="feature-pill">
+                                <span className="material-symbols-outlined">cloud_sync</span>
+                                <span>100% Nube</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}

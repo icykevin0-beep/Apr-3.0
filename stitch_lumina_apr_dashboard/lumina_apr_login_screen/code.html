@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR - Iniciar Sesión</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6b3df5",
+                        "secondary": "#a78bfa",
+                        "background-dark-start": "#1a1f36",
+                        "background-dark-end": "#0d1117",
+                        "glass-surface": "rgba(255, 255, 255, 0.05)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    backgroundImage: {
+                        'primary-gradient': 'linear-gradient(135deg, #6b3df5 0%, #8b5cf6 100%)',
+                        'hover-gradient': 'linear-gradient(135deg, #7c4dff 0%, #9c6dff 100%)',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(107, 61, 245, 0.3)',
+                        'glow-input': '0 0 0 2px rgba(107, 61, 245, 0.5)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #151023; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3168; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b3df5; 
+        }
+
+        /* Subtle water drop animation pattern */
+        .bg-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+    </style>
+</head>
+<body class="font-display antialiased text-white bg-background-dark-end h-screen overflow-hidden selection:bg-primary selection:text-white">
+<div class="flex h-full w-full">
+<!-- Left Side: Login Form -->
+<div class="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-6 lg:p-12 z-10 bg-gradient-to-br from-background-dark-start to-background-dark-end bg-pattern">
+<!-- Abstract decorations -->
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[100px]"></div>
+</div>
+<!-- Glass Card -->
+<div class="w-full max-w-[450px] relative z-10 backdrop-blur-xl bg-glass-surface border border-glass-border rounded-2xl shadow-2xl p-8 sm:p-10 transition-all duration-300 hover:border-primary/30">
+<!-- Header -->
+<div class="flex flex-col items-center text-center mb-8">
+<div class="w-16 h-16 rounded-2xl bg-primary-gradient flex items-center justify-center mb-4 shadow-glow transform transition-transform hover:scale-105">
+<span class="material-symbols-outlined text-white text-[32px]">water_drop</span>
+</div>
+<h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">Lumina APR</h1>
+<p class="text-gray-400 text-sm font-medium">Sistema de Gestión de Agua Potable Rural</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-5">
+<!-- Email Input -->
+<div class="group">
+<label class="block text-sm font-medium text-gray-300 mb-1.5 ml-1">Email o RUT</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">person</span>
+</div>
+<input class="w-full pl-12 pr-4 py-3.5 bg-[#1e2538]/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 text-white placeholder-gray-500 transition-all duration-200" placeholder="ejemplo@lumina.com" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="group">
+<label class="block text-sm font-medium text-gray-300 mb-1.5 ml-1">Contraseña</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">lock</span>
+</div>
+<input class="w-full pl-12 pr-12 py-3.5 bg-[#1e2538]/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 text-white placeholder-gray-500 transition-all duration-200" placeholder="••••••••" type="password"/>
+<div class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer">
+<span class="material-symbols-outlined text-gray-400 hover:text-white transition-colors text-xl">visibility</span>
+</div>
+</div>
+</div>
+<!-- Options -->
+<div class="flex items-center justify-between text-sm">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 rounded border-gray-600 bg-[#1e2538] text-primary focus:ring-offset-0 focus:ring-primary/50 transition-colors cursor-pointer" type="checkbox"/>
+<span class="text-gray-400 group-hover:text-gray-300 transition-colors">Recordarme</span>
+</label>
+<a class="text-secondary hover:text-white transition-colors font-medium" href="#">¿Olvidaste tu contraseña?</a>
+</div>
+<!-- Submit Button -->
+<button class="w-full py-3.5 px-4 bg-primary-gradient hover:bg-hover-gradient text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transform active:scale-[0.98] transition-all duration-200 text-base" type="button">
+                        Iniciar Sesión
+                    </button>
+</form>
+<!-- Divider -->
+<div class="relative my-8">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-gray-700/50"></div>
+</div>
+<div class="relative flex justify-center text-xs">
+<span class="px-4 bg-[#161b2c] text-gray-500 uppercase tracking-wider rounded-full py-0.5 backdrop-blur-sm border border-gray-800">O continúa con</span>
+</div>
+</div>
+<!-- Social Login -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1e2538]/50 hover:bg-[#2a324a] border border-gray-700/50 hover:border-gray-500 rounded-xl transition-all duration-200 group">
+<!-- Google SVG Icon -->
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+<span class="text-gray-300 text-sm font-medium group-hover:text-white">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1e2538]/50 hover:bg-[#2a324a] border border-gray-700/50 hover:border-gray-500 rounded-xl transition-all duration-200 group">
+<!-- Microsoft SVG Icon -->
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 23 23">
+<path d="M0 0h11v11H0zM12 0h11v11H12zM0 12h11v11H0zM12 12h11v11H12z" fill="#f3f3f3"></path>
+</svg>
+<span class="text-gray-300 text-sm font-medium group-hover:text-white">Microsoft</span>
+</button>
+</div>
+<!-- Footer Text -->
+<div class="mt-8 text-center space-y-4">
+<p class="text-gray-400 text-sm">
+                        ¿No tienes cuenta? 
+                        <a class="text-secondary hover:text-white font-semibold transition-colors" href="#">Solicitar Acceso</a>
+</p>
+<p class="text-gray-600 text-xs">© 2026 Lumina APR. Todos los derechos reservados.</p>
+</div>
+</div>
+</div>
+<!-- Right Side: Visual Image (Desktop only) -->
+<div class="hidden lg:flex w-1/2 relative bg-gray-900 h-full overflow-hidden">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] hover:scale-105" data-alt="Beautiful lush rural landscape with hills and mist during sunrise, representing clean rural environment" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVweetBdOd7Rb4C2tlsQ5MZnBDFPMftFGCmTsdati9WagZAWka-wE6Sq9vp9mxGD5VGejvXGNLdFuiYOb67qUhPQ4fVnPuN7l-6YAeMY1WVcnEv8DwatcuPgl57qk9Xj4vkROI62YIyO66hpTPiakIJQA1ryy2-zmnR3fKEABEDr7-vVDvWyUl-Hnv-NxF5moXlGtHQgYr-k2bQPt2y6Q_5I1zwZ-fRAY5jE8qA-WpzDHLhkkJyuFO4V45AmT6GhokBgSFKCRj9O4");'>
+</div>
+<!-- Gradient Overlay for Readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark-end via-background-dark-end/70 to-transparent"></div>
+<div class="absolute inset-0 bg-primary/20 mix-blend-overlay"></div>
+<!-- Text Content -->
+<div class="relative z-10 flex flex-col justify-end h-full p-16 w-full max-w-3xl mx-auto">
+<div class="mb-12 space-y-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 w-fit">
+<span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+<span class="text-xs font-semibold text-white tracking-wide uppercase">Plataforma Segura</span>
+</div>
+<h2 class="text-5xl font-black text-white leading-tight tracking-tight drop-shadow-lg">
+                        Gestiona tu APR <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">de forma inteligente</span>
+</h2>
+<p class="text-lg text-gray-200 max-w-lg font-light leading-relaxed drop-shadow-md">
+                        Controla el consumo, facturación y mantenimiento de tu red de agua potable rural en una sola plataforma unificada y moderna.
+                    </p>
+<!-- Feature pills -->
+<div class="flex flex-wrap gap-3 pt-4">
+<div class="flex items-center gap-2 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/10">
+<span class="material-symbols-outlined text-blue-300 text-sm">monitoring</span>
+<span class="text-sm text-gray-200">Monitoreo Real</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/10">
+<span class="material-symbols-outlined text-green-300 text-sm">payments</span>
+<span class="text-sm text-gray-200">Pagos Fáciles</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/10">
+<span class="material-symbols-outlined text-purple-300 text-sm">cloud_sync</span>
+<span class="text-sm text-gray-200">100% Nube</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

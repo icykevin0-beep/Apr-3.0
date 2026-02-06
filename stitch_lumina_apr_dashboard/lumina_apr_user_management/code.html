@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR User Management</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#51a9fb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1923",
+                        "surface-dark": "#182735",
+                        "border-dark": "#2f4d6a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(24, 39, 53, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Custom scrollbar for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f1923; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2f4d6a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #51a9fb; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Sidebar -->
+<aside class="flex w-72 flex-col border-r border-border-dark bg-background-dark flex-shrink-0 transition-all duration-300">
+<div class="flex flex-col h-full p-4 justify-between">
+<div class="flex flex-col gap-6">
+<!-- Logo Area -->
+<div class="flex items-center gap-3 px-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 shadow-lg shadow-primary/20" data-alt="Abstract water drop logo gradient" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5iY68hrkIGc60mo1UtD7oUnrvC_nk9y1B_q5J1lXrA6odkBJDjYZqEZAN1JCsqeOpYuJiiDUK_tYkFCR86XyEWPTd5CBDhy7m3SnZrQUQpnTDlOe8y5l2jFy8JG3d-FFyV1FfeFQhk6dMDkol4hmO2kODFNPLseMoOCrHnGhfvhEhKKRRJye_J8eEAF-OvEEUNdbGMz6RYLVq0H9-ZLbj-LN7Mf0G2Jo3v3GoB2Dnk9LgmqxGXd7UPWGb0zA4IMPeKZNiznqfXX8");'></div>
+<h1 class="text-white text-lg font-bold tracking-wide">Lumina APR</h1>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">water_drop</span>
+<span class="text-sm font-medium">Lecturas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">payments</span>
+<span class="text-sm font-medium">Pagos</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface-dark border border-border-dark shadow-sm text-white" href="#">
+<span class="material-symbols-outlined text-primary fill-1">manage_accounts</span>
+<span class="text-sm font-bold">Usuarios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Configuración</span>
+</a>
+</nav>
+</div>
+<!-- Footer / Profile -->
+<div class="px-2 py-4 border-t border-border-dark">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">JD</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white">John Doe</span>
+<span class="text-[10px] text-slate-400">Super Admin</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-dark relative">
+<div class="mx-auto max-w-[1200px] p-8 flex flex-col gap-8">
+<!-- Header -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h2 class="text-white text-3xl font-black tracking-tight flex items-center gap-3">
+<span class="material-symbols-outlined text-4xl text-primary">groups</span>
+                            Gestión de Usuarios y Roles
+                        </h2>
+<p class="text-slate-400 text-sm">Administra el acceso y los permisos de la organización</p>
+</div>
+<button class="flex items-center gap-2 rounded-xl bg-primary hover:bg-blue-400 text-background-dark px-5 py-2.5 text-sm font-bold transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Nuevo Usuario
+                    </button>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Card 1 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-3 group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-purple-500/10 rounded-lg text-purple-400 group-hover:text-purple-300 group-hover:bg-purple-500/20 transition-all">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+</div>
+<span class="text-2xl font-bold text-white">2</span>
+</div>
+<div>
+<h3 class="text-white font-bold">Administradores</h3>
+<p class="text-slate-400 text-xs">Acceso total al sistema</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-3 group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-blue-500/10 rounded-lg text-blue-400 group-hover:text-blue-300 group-hover:bg-blue-500/20 transition-all">
+<span class="material-symbols-outlined">description</span>
+</div>
+<span class="text-2xl font-bold text-white">3</span>
+</div>
+<div>
+<h3 class="text-white font-bold">Administrativos</h3>
+<p class="text-slate-400 text-xs">Acceso de edición y gestión</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-3 group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-green-500/10 rounded-lg text-green-400 group-hover:text-green-300 group-hover:bg-green-500/20 transition-all">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+<span class="text-2xl font-bold text-white">2</span>
+</div>
+<div>
+<h3 class="text-white font-bold">Operadores</h3>
+<p class="text-slate-400 text-xs">Lectura y escritura de medidores</p>
+</div>
+</div>
+</div>
+<!-- Main Table -->
+<div class="flex flex-col gap-4">
+<h3 class="text-xl font-bold text-white">Usuarios del Sistema</h3>
+<div class="glass-panel rounded-xl overflow-hidden border border-border-dark">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-dark border-b border-border-dark">
+<tr>
+<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Usuario</th>
+<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Rol</th>
+<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Estado</th>
+<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Último Acceso</th>
+<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-right text-slate-400">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-xs font-bold text-white ring-2 ring-transparent group-hover:ring-primary/50 transition-all">PG</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-white">Pedro González</span>
+<span class="text-xs text-slate-500">pedro.g@lumina.apr</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-purple-500/10 px-2.5 py-1 text-xs font-medium text-purple-300 ring-1 ring-inset ring-purple-500/20">Administrador</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-sm text-slate-300">Activo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-400">Hace 10 min</td>
+<td class="px-6 py-4 text-right">
+<button class="text-sm font-semibold text-primary hover:text-blue-300 transition-colors">Editar</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-xs font-bold text-white ring-2 ring-transparent group-hover:ring-primary/50 transition-all">AM</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-white">Ana Morales</span>
+<span class="text-xs text-slate-500">ana.m@lumina.apr</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-blue-500/10 px-2.5 py-1 text-xs font-medium text-blue-300 ring-1 ring-inset ring-blue-500/20">Secretaría</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-green-500"></div>
+<span class="text-sm text-slate-300">Activo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-400">Ayer</td>
+<td class="px-6 py-4 text-right">
+<button class="text-sm font-semibold text-primary hover:text-blue-300 transition-colors">Editar</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-xs font-bold text-white ring-2 ring-transparent group-hover:ring-primary/50 transition-all">CR</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-white">Carlos Ruiz</span>
+<span class="text-xs text-slate-500">carlos.r@lumina.apr</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-green-500/10 px-2.5 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-500/20">Operador</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-slate-500"></div>
+<span class="text-sm text-slate-500">Inactivo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-400">Hace 5 días</td>
+<td class="px-6 py-4 text-right">
+<button class="text-sm font-semibold text-primary hover:text-blue-300 transition-colors">Editar</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Overlay (Simulated Open State) -->
+<div class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+<div class="glass-panel w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden transform transition-all border border-primary/20">
+<!-- Modal Header -->
+<div class="px-6 py-5 border-b border-border-dark flex justify-between items-center bg-surface-dark/50">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-blue-500/20 rounded-lg text-blue-400">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white leading-none">Permisos de Rol</h3>
+<span class="text-sm text-blue-300 font-medium">Secretaría</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-6">
+<p class="text-sm text-slate-400 mb-6">Configure los niveles de acceso para este rol por cada módulo del sistema.</p>
+<div class="rounded-xl border border-border-dark bg-background-dark/50 overflow-hidden">
+<!-- Table Header for Modal -->
+<div class="grid grid-cols-4 bg-surface-dark/80 px-4 py-3 text-xs font-semibold text-slate-300 uppercase tracking-wider">
+<div class="col-span-1">Módulo</div>
+<div class="col-span-1 text-center">Ver</div>
+<div class="col-span-1 text-center">Editar</div>
+<div class="col-span-1 text-center text-red-400">Eliminar</div>
+</div>
+<!-- Permission Rows -->
+<div class="divide-y divide-border-dark">
+<!-- Socios -->
+<div class="grid grid-cols-4 px-4 py-3 items-center hover:bg-white/5 transition-colors">
+<div class="col-span-1 flex items-center gap-2 text-white font-medium">
+<span class="material-symbols-outlined text-slate-500 text-lg">group</span>
+                                        Socios
+                                    </div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input class="rounded border-slate-700 bg-slate-800 text-slate-500 focus:ring-0 cursor-not-allowed size-4 opacity-50" disabled="" type="checkbox"/>
+</div>
+</div>
+<!-- Lecturas -->
+<div class="grid grid-cols-4 px-4 py-3 items-center hover:bg-white/5 transition-colors">
+<div class="col-span-1 flex items-center gap-2 text-white font-medium">
+<span class="material-symbols-outlined text-slate-500 text-lg">water_drop</span>
+                                        Lecturas
+                                    </div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input class="rounded border-slate-700 bg-slate-800 text-slate-500 focus:ring-0 cursor-not-allowed size-4 opacity-50" disabled="" type="checkbox"/>
+</div>
+</div>
+<!-- Pagos -->
+<div class="grid grid-cols-4 px-4 py-3 items-center hover:bg-white/5 transition-colors">
+<div class="col-span-1 flex items-center gap-2 text-white font-medium">
+<span class="material-symbols-outlined text-slate-500 text-lg">payments</span>
+                                        Pagos
+                                    </div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input class="rounded border-slate-700 bg-slate-800 text-slate-500 focus:ring-0 cursor-not-allowed size-4 opacity-50" disabled="" type="checkbox"/>
+</div>
+</div>
+<!-- Configuración -->
+<div class="grid grid-cols-4 px-4 py-3 items-center hover:bg-white/5 transition-colors">
+<div class="col-span-1 flex items-center gap-2 text-white font-medium">
+<span class="material-symbols-outlined text-slate-500 text-lg">settings</span>
+                                        Config.
+                                    </div>
+<div class="col-span-1 flex justify-center">
+<input checked="" class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input class="rounded border-slate-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark size-4" type="checkbox"/>
+</div>
+<div class="col-span-1 flex justify-center">
+<input class="rounded border-slate-700 bg-slate-800 text-slate-500 focus:ring-0 cursor-not-allowed size-4 opacity-50" disabled="" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-4 bg-surface-dark/50 border-t border-border-dark flex justify-end gap-3">
+<button class="px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Cancelar</button>
+<button class="px-4 py-2 text-sm font-bold text-background-dark bg-primary hover:bg-blue-400 rounded-lg shadow-lg shadow-primary/20 transition-all">Guardar Cambios</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

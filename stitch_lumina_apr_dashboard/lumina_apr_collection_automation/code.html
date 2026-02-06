@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina APR - Automatización de Cobranza</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#51a9fb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1923",
+                        "surface-dark": "#182430",
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for Odoo/Glass feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f1923; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2f4d6a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #51a9fb; 
+        }
+        
+        .glass-panel {
+            background: rgba(24, 36, 48, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-hidden h-screen antialiased selection:bg-primary/30">
+<div class="flex h-full w-full">
+<!-- Side Navigation Bar -->
+<aside class="w-64 h-full flex flex-col justify-between border-r border-glass-border bg-[#101a23] shrink-0 z-20">
+<div class="flex flex-col gap-4 p-4">
+<!-- User Profile / Brand -->
+<div class="flex gap-3 items-center mb-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-primary/20" data-alt="Abstract geometric logo representing Lumina APR" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuClUaM15vuExGUTTfdmI00zDlDYairulYYFXV0ft6ydqhyZfkj2sYEWZKtPKg1N_92s87yeaPm3_RGacYiEEa3K-d_lshfef3-BhrW6HCpvhach-FdwuYjWMxdmtwKWKwzS1r9CY-i1kpY-BVsIgmwZHxOrHq06Lm5tm3kIO1d6nhCNUci7uzGTs__C59sGSx-COF_Jy7zmQivfDbZQDBzybg54ueZrfhrgVJlbhG7HnVl0VAaxkwLE7VLKg8pGr3H2VUE798JTEr0");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-bold leading-normal">Lumina APR</h1>
+<p class="text-[#8eaecc] text-xs font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-white">dashboard</span>
+<p class="text-[#8eaecc] group-hover:text-white text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-white">group</span>
+<p class="text-[#8eaecc] group-hover:text-white text-sm font-medium leading-normal">Socios</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-white">receipt_long</span>
+<p class="text-[#8eaecc] group-hover:text-white text-sm font-medium leading-normal">Facturación</p>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 border border-primary/10" href="#">
+<span class="material-symbols-outlined text-primary fill-1">payments</span>
+<p class="text-white text-sm font-medium leading-normal">Cobranza</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-white">settings</span>
+<p class="text-[#8eaecc] group-hover:text-white text-sm font-medium leading-normal">Configuración</p>
+</a>
+</nav>
+</div>
+<!-- Bottom Action -->
+<div class="p-4 border-t border-glass-border">
+<button class="flex items-center gap-3 px-3 py-2 w-full rounded-lg hover:bg-red-500/10 hover:text-red-400 text-[#8eaecc] transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Cerrar Sesión</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 h-full overflow-y-auto relative z-10">
+<!-- Background Elements for Glassmorphism depth -->
+<div class="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-[0%] left-[10%] w-[300px] h-[300px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="layout-content-container flex flex-col max-w-[1200px] mx-auto p-6 md:p-8 lg:p-10 gap-8">
+<!-- Header Section -->
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-3xl md:text-4xl font-bold tracking-tight">Automatización de Cobranza</h2>
+<p class="text-[#8eaecc] text-base font-normal">Gestiona reglas automáticas y plantillas de comunicación.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-lg bg-surface-dark border border-glass-border text-white text-sm font-medium hover:bg-white/5 transition flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">history</span>
+                            Historial
+                        </button>
+<button class="px-4 py-2 rounded-lg bg-primary hover:bg-blue-400 text-white shadow-lg shadow-primary/20 text-sm font-bold transition flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            Nueva Regla
+                        </button>
+</div>
+</div>
+<!-- Statistics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/20 rounded-lg text-primary">
+<span class="material-symbols-outlined">send</span>
+</div>
+<span class="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +12%
+                            </span>
+</div>
+<p class="text-[#8eaecc] text-sm font-medium mt-2">Mensajes Enviados (Mes)</p>
+<p class="text-white text-3xl font-bold tracking-tight">1,240</p>
+</div>
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
+<span class="material-symbols-outlined">attach_money</span>
+</div>
+<span class="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +8%
+                            </span>
+</div>
+<p class="text-[#8eaecc] text-sm font-medium mt-2">Recuperación Exitosa</p>
+<p class="text-white text-3xl font-bold tracking-tight">$45,600</p>
+</div>
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-purple-500/20 rounded-lg text-purple-400">
+<span class="material-symbols-outlined">mark_email_read</span>
+</div>
+<span class="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +2%
+                            </span>
+</div>
+<p class="text-[#8eaecc] text-sm font-medium mt-2">Tasa de Apertura</p>
+<p class="text-white text-3xl font-bold tracking-tight">85%</p>
+</div>
+</div>
+<!-- Main Grid Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+<!-- Left Column: Automation Rules (7 cols) -->
+<div class="xl:col-span-7 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">alt_route</span>
+                                Flujos de Cobranza
+                            </h3>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Rule 1 -->
+<div class="glass-panel p-5 rounded-xl border border-glass-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-primary/30 transition-colors">
+<div class="flex gap-4 items-center">
+<div class="bg-[#21364a] p-3 rounded-full hidden sm:block">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-primary transition-colors">notifications_active</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-white text-base font-bold leading-tight">Recordatorio Previo</p>
+<p class="text-[#8eaecc] text-sm font-normal">Enviar Email 3 días antes del vencimiento.</p>
+</div>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-[#21364a] p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-all duration-300">
+<div class="h-[24px] w-[24px] rounded-full bg-white shadow-sm"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<!-- Rule 2 -->
+<div class="glass-panel p-5 rounded-xl border border-glass-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-primary/30 transition-colors">
+<div class="flex gap-4 items-center">
+<div class="bg-[#21364a] p-3 rounded-full hidden sm:block">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-green-400 transition-colors">chat</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-white text-base font-bold leading-tight flex items-center gap-2">
+                                            Alerta de Pago Vencido
+                                            <span class="bg-green-500/20 text-green-400 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">WhatsApp</span>
+</p>
+<p class="text-[#8eaecc] text-sm font-normal">Enviar mensaje automático 1 día después del vencimiento.</p>
+</div>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-[#21364a] p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-all duration-300">
+<div class="h-[24px] w-[24px] rounded-full bg-white shadow-sm"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<!-- Rule 3 -->
+<div class="glass-panel p-5 rounded-xl border border-glass-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-primary/30 transition-colors">
+<div class="flex gap-4 items-center">
+<div class="bg-[#21364a] p-3 rounded-full hidden sm:block">
+<span class="material-symbols-outlined text-[#8eaecc] group-hover:text-red-400 transition-colors">block</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-white text-base font-bold leading-tight">Aviso de Corte</p>
+<p class="text-[#8eaecc] text-sm font-normal">Notificación final tras 2 meses impagos.</p>
+</div>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-[#21364a] p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-all duration-300">
+<div class="h-[24px] w-[24px] rounded-full bg-white shadow-sm"></div>
+<input class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Integrations Status -->
+<h3 class="text-lg font-bold text-white mt-4">Integraciones</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-surface-dark border border-glass-border p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined">call</span>
+</div>
+<div>
+<p class="text-white font-medium text-sm">WhatsApp API</p>
+<p class="text-green-400 text-xs font-medium flex items-center gap-1">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Conectado
+                                        </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#8eaecc]">settings</span>
+</div>
+<div class="bg-surface-dark border border-glass-border p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="text-white font-medium text-sm">SMTP Gateway</p>
+<p class="text-green-400 text-xs font-medium flex items-center gap-1">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Verificado
+                                        </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#8eaecc]">settings</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Template Editor (5 cols) -->
+<div class="xl:col-span-5">
+<div class="glass-panel rounded-xl h-full flex flex-col border border-glass-border">
+<div class="p-5 border-b border-glass-border flex justify-between items-center">
+<h3 class="text-lg font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-purple-400">edit_note</span>
+                                    Editor de Plantillas
+                                </h3>
+<div class="flex bg-[#101a23] rounded-lg p-1">
+<button class="px-3 py-1 text-xs font-medium rounded bg-white/10 text-white">Email</button>
+<button class="px-3 py-1 text-xs font-medium rounded text-[#8eaecc] hover:text-white">WhatsApp</button>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-[#8eaecc] text-xs font-bold uppercase tracking-wider">Asunto</label>
+<input class="bg-[#101a23] border border-[#2f4d6a] text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" type="text" value="Recordatorio de Factura Pendiente"/>
+</div>
+<div class="flex flex-col gap-2 flex-1">
+<label class="text-[#8eaecc] text-xs font-bold uppercase tracking-wider">Contenido</label>
+<textarea class="flex-1 bg-[#101a23] border border-[#2f4d6a] text-white rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all min-h-[150px]" style="line-height: 1.6;">Hola {nombre_socio},
+
+Esperamos que te encuentres bien.
+Te recordamos amablemente que tu factura correspondiente al mes de {mes} por un monto de {monto} está próxima a vencer.
+
+Puedes realizar tu pago a través de nuestra plataforma.
+
+Saludos,
+El equipo de Lumina APR.</textarea>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[#8eaecc] text-xs font-bold uppercase tracking-wider">Variables Disponibles</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition cursor-copy flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">data_object</span>
+                                            {nombre_socio}
+                                        </button>
+<button class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition cursor-copy flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">attach_money</span>
+                                            {monto}
+                                        </button>
+<button class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition cursor-copy flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                                            {mes}
+                                        </button>
+<button class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition cursor-copy flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">link</span>
+                                            {link_pago}
+                                        </button>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-glass-border flex justify-end gap-3">
+<button class="px-4 py-2 rounded-lg text-white text-sm font-medium hover:bg-white/5 transition">Descartar</button>
+<button class="px-6 py-2 rounded-lg bg-primary hover:bg-blue-400 text-white shadow-lg shadow-primary/20 text-sm font-bold transition">Guardar Cambios</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
