@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { db } from '../db/database'
+import { db, onDatabaseChange } from '../db/database'
 import './Dashboard.css'
 
 export default function Dashboard() {
@@ -10,6 +10,11 @@ export default function Dashboard() {
         lecturasPendientes: 0
     })
     const [activities, setActivities] = useState([])
+
+    // Debug: Track activities changes
+    useEffect(() => {
+        console.log('🎯 Activities state changed to:', activities.length, 'items')
+    }, [activities])
 
     useEffect(() => {
         async function loadData() {
@@ -31,19 +36,119 @@ export default function Dashboard() {
                     lecturasPendientes: Math.max(0, pendientes - lecturas.length)
                 })
 
-                // Recent activities mock
-                setActivities([
-                    { id: 1, type: 'payment', user: 'Juan Pérez', action: 'realizó un pago', amount: '$12.500', time: 'Hace 5 minutos' },
-                    { id: 2, type: 'reading', user: 'María López', action: 'registró lectura', amount: '22 m³', time: 'Hace 15 minutos' },
-                    { id: 3, type: 'member', user: 'Admin', action: 'agregó nuevo socio', amount: 'Pedro Soto', time: 'Hace 1 hora' },
-                    { id: 4, type: 'alert', user: 'Sistema', action: 'alerta de consumo alto', amount: 'Sector Norte', time: 'Hace 2 horas' },
-                ])
+                // Load real activities from database
+                await loadRecentActivities()
             } catch (error) {
                 console.error('Error loading dashboard data:', error)
             }
         }
+
         loadData()
+
+        // Listen for database changes and reload
+        const unsubscribe = onDatabaseChange((event) => {
+            console.log('🔄 Database changed:', event)
+            loadData()
+        })
+
+        return () => unsubscribe()
     }, [])
+
+    async function loadRecentActivities() {
+        try {
+            const allActivities = []
+
+            // Get recent members (all, then sort in JS since fechaCreacion might not be indexed)
+            const allMembers = await db.socios.toArray()
+            const recentMembers = allMembers
+                .filter(m => m.fechaCreacion) // Only members with creation date
+                .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion))
+                .slice(0, 10)
+
+            console.log('📊 Recent members:', recentMembers.length)
+
+            recentMembers.forEach(member => {
+                allActivities.push({
+                    id: `member-${member.id}`,
+                    type: 'member',
+                    user: 'Admin',
+                    action: 'agregó nuevo socio',
+                    amount: member.nombre,
+                    timestamp: new Date(member.fechaCreacion),
+                    time: getRelativeTime(new Date(member.fechaCreacion))
+                })
+            })
+
+            // Get recent readings (all, then sort in JS)
+            const allReadings = await db.lecturas.toArray()
+            const recentReadings = allReadings
+                .filter(r => r.fecha)
+                .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+                .slice(0, 10)
+
+            for (const reading of recentReadings) {
+                const socio = await db.socios.get(reading.socioId)
+                allActivities.push({
+                    id: `reading-${reading.id}`,
+                    type: 'reading',
+                    user: socio?.nombre || 'Usuario',
+                    action: 'registró lectura',
+                    amount: `${reading.consumo || 0} m³`,
+                    timestamp: new Date(reading.fecha),
+                    time: getRelativeTime(new Date(reading.fecha))
+                })
+            }
+
+            // Get recent payments (all, then sort in JS)
+            const allPayments = await db.pagos.toArray()
+            const recentPayments = allPayments
+                .filter(p => p.fechaPago)
+                .sort((a, b) => new Date(b.fechaPago) - new Date(a.fechaPago))
+                .slice(0, 10)
+
+            for (const payment of recentPayments) {
+                const boleta = await db.boletas.get(payment.boletaId)
+                const socio = await db.socios.get(boleta?.socioId || payment.socioId)
+                allActivities.push({
+                    id: `payment-${payment.id}`,
+                    type: 'payment',
+                    user: socio?.nombre || 'Usuario',
+                    action: 'realizó un pago',
+                    amount: `$${payment.monto.toLocaleString()}`,
+                    timestamp: new Date(payment.fechaPago),
+                    time: getRelativeTime(new Date(payment.fechaPago))
+                })
+            }
+
+            // Sort all activities by timestamp (most recent first) and take top 10
+            allActivities.sort((a, b) => b.timestamp - a.timestamp)
+            const topActivities = allActivities.slice(0, 10)
+
+            console.log('📊 Total activities loaded:', topActivities.length)
+            if (topActivities.length > 0) {
+                console.table(topActivities.map(a => ({ user: a.user, action: a.action, amount: a.amount, time: a.time })))
+            }
+            setActivities(topActivities)
+
+        } catch (error) {
+            console.error('❌ Error loading activities:', error)
+            setActivities([])
+        }
+    }
+
+    function getRelativeTime(date) {
+        const now = new Date()
+        const diffMs = now - date
+        const diffMins = Math.floor(diffMs / 60000)
+        const diffHours = Math.floor(diffMs / 3600000)
+        const diffDays = Math.floor(diffMs / 86400000)
+
+        if (diffMins < 1) return 'Justo ahora'
+        if (diffMins < 60) return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`
+        if (diffHours < 24) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`
+        if (diffDays < 7) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`
+        return date.toLocaleDateString('es-CL')
+    }
 
     const getActivityIcon = (type) => {
         switch (type) {
@@ -278,19 +383,27 @@ export default function Dashboard() {
                         </a>
                     </div>
                     <div className="activity-list">
-                        {activities.map(activity => (
-                            <div key={activity.id} className="activity-item">
-                                <div className={`activity-icon ${getActivityColor(activity.type)}`}>
-                                    <span className="material-symbols-outlined">{getActivityIcon(activity.type)}</span>
-                                </div>
-                                <div className="activity-content">
-                                    <p className="activity-text">
-                                        <strong>{activity.user}</strong> {activity.action} <span className="highlight">{activity.amount}</span>
-                                    </p>
-                                    <span className="activity-time">{activity.time}</span>
-                                </div>
+                        {activities.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
+                                <span className="material-symbols-outlined" style={{ fontSize: '3rem', opacity: 0.3, display: 'block', marginBottom: '1rem' }}>inbox</span>
+                                <p>No hay actividad reciente</p>
+                                <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>La actividad se mostrará aquí cuando realices acciones</p>
                             </div>
-                        ))}
+                        ) : (
+                            activities.map(activity => (
+                                <div key={activity.id} className="activity-item">
+                                    <div className={`activity-icon ${getActivityColor(activity.type)}`}>
+                                        <span className="material-symbols-outlined">{getActivityIcon(activity.type)}</span>
+                                    </div>
+                                    <div className="activity-content">
+                                        <p className="activity-text">
+                                            <strong>{activity.user}</strong> {activity.action} <span className="highlight">{activity.amount}</span>
+                                        </p>
+                                        <span className="activity-time">{activity.time}</span>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

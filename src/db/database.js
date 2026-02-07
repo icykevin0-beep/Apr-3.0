@@ -22,7 +22,19 @@ db.version(1).stores({
     tarifas: '++id, tramoMin, tramoMax, precio, vigente'
 })
 
-// Seed initial data
+// Event system for real-time updates across components
+const dbEventListeners = new Set()
+
+export function onDatabaseChange(callback) {
+    dbEventListeners.add(callback)
+    return () => dbEventListeners.delete(callback)
+}
+
+export function notifyDatabaseChange(tableName, action) {
+    dbEventListeners.forEach(listener => listener({ tableName, action }))
+}
+
+// Seed initial data (DISABLED FOR PRODUCTION)
 export async function seedDatabase() {
     const sociosCount = await db.socios.count()
 
@@ -55,5 +67,18 @@ export async function seedDatabase() {
     }
 }
 
-// Initialize database on load
-seedDatabase()
+// Utility: Clear all data (useful for production fresh start)
+export async function clearAllData() {
+    await db.socios.clear()
+    await db.lecturas.clear()
+    await db.boletas.clear()
+    await db.pagos.clear()
+    await db.tarifas.clear()
+    await db.configuracion.clear()
+    console.log('🗑️ All data cleared from database')
+    return true
+}
+
+// Initialize database on load (DISABLED FOR PRODUCTION)
+// seedDatabase()
+

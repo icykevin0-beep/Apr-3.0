@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { db } from '../db/database'
+import { db, notifyDatabaseChange } from '../db/database'
 import './Members.css'
 
 export default function Members() {
@@ -49,17 +49,28 @@ export default function Members() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        console.log('📝 Submitting new member:', newMember)
+
         try {
-            await db.socios.add({
+            const id = await db.socios.add({
                 ...newMember,
                 estado: 'activo',
                 fechaCreacion: new Date().toISOString()
             })
+            console.log('✅ Member added successfully with ID:', id)
+
             setShowModal(false)
             setNewMember({ rut: '', nombre: '', direccion: '', medidor: '', telefono: '', email: '' })
-            loadMembers()
+            await loadMembers()
+
+            // Notify other components (like Dashboard) that data changed
+            notifyDatabaseChange('socios', 'add')
+
+            // Show success notification
+            alert('✅ Socio agregado correctamente')
         } catch (error) {
-            console.error('Error adding member:', error)
+            console.error('❌ Error adding member:', error)
+            alert('❌ Error al agregar socio: ' + error.message)
         }
     }
 

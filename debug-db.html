@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Database - Lumina APR</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 2rem;
+            background: #0f0f23;
+            color: #00ff00;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: #00ff00;
+            margin: 0 0 1rem 0;
+        }
+
+        h2 {
+            color: #00ccff;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        pre {
+            background: #000;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            color: #fff;
+        }
+
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        button:hover {
+            background: #00cc00;
+        }
+
+        .error {
+            color: #ff4444;
+        }
+
+        .success {
+            color: #00ff00;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Database Debug Tool</h1>
+
+    <div class="card">
+        <h2>Database Contents</h2>
+        <button onclick="debugDatabase()">Check Database</button>
+        <button onclick="testActivityLoad()">Test Activity Load</button>
+    </div>
+
+    <div class="card">
+        <h2>Results:</h2>
+        <pre id="output">Click "Check Database" to start...</pre>
+    </div>
+
+    <script type="module">
+        import { db } from './src/db/database.js'
+
+        window.debugDatabase = async function () {
+            const output = document.getElementById('output')
+            output.innerHTML = 'Loading...\n'
+
+            try {
+                const socios = await db.socios.toArray()
+                const lecturas = await db.lecturas.toArray()
+                const boletas = await db.boletas.toArray()
+                const pagos = await db.pagos.toArray()
+
+                let result = '=== DATABASE CONTENTS ===\n\n'
+
+                result += `📊 SOCIOS (${socios.length} total):\n`
+                socios.forEach((s, i) => {
+                    result += `  ${i + 1}. ID: ${s.id}, Nombre: ${s.nombre}, fechaCreacion: ${s.fechaCreacion || 'MISSING!'}\n`
+                })
+
+                result += `\n📖 LECTURAS (${lecturas.length} total):\n`
+                lecturas.forEach((l, i) => {
+                    result += `  ${i + 1}. ID: ${l.id}, socioId: ${l.socioId}, fecha: ${l.fecha || 'MISSING!'}\n`
+                })
+
+                result += `\n📄 BOLETAS (${boletas.length} total):\n`
+                boletas.forEach((b, i) => {
+                    result += `  ${i + 1}. ID: ${b.id}, socioId: ${b.socioId}\n`
+                })
+
+                result += `\n💰 PAGOS (${pagos.length} total):\n`
+                pagos.forEach((p, i) => {
+                    result += `  ${i + 1}. ID: ${p.id}, boletaId: ${p.boletaId}, fechaPago: ${p.fechaPago || 'MISSING!'}\n`
+                })
+
+                output.innerHTML = result
+
+            } catch (error) {
+                output.innerHTML = '❌ ERROR:\n' + error.toString() + '\n\n' + error.stack
+            }
+        }
+
+        window.testActivityLoad = async function () {
+            const output = document.getElementById('output')
+            output.innerHTML = 'Testing activity load...\n'
+
+            try {
+                // Same logic as Dashboard
+                const allActivities = []
+
+                // Get members
+                const allMembers = await db.socios.toArray()
+                const recentMembers = allMembers
+                    .filter(m => m.fechaCreacion)
+                    .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion))
+                    .slice(0, 10)
+
+                let result = `✅ Found ${recentMembers.length} members with fechaCreacion\n\n`
+
+                recentMembers.forEach(member => {
+                    const time = new Date(member.fechaCreacion)
+                    result += `  - ${member.nombre} (created: ${time.toISOString()})\n`
+                    allActivities.push({
+                        id: 'member-' + member.id,
+                        type: 'member',
+                        user: 'Admin',
+                        action: 'agregó nuevo socio',
+                        amount: member.nombre,
+                        timestamp: time
+                    })
+                })
+
+                result += `\n✅ Total activities: ${allActivities.length}\n`
+                output.innerHTML = result
+
+            } catch (error) {
+                output.innerHTML = '❌ ERROR:\n' + error.toString() + '\n\n' + error.stack
+            }
+        }
+    </script>
+</body>
+
+</html>

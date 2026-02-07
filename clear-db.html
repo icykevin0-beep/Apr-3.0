@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpiar Base de Datos - Lumina APR</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: #0f0f23;
+            color: white;
+        }
+
+        .card {
+            background: rgba(33, 33, 74, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        h1 {
+            margin: 0 0 1rem 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid #fbbf24;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid #34d399;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>🗑️ Limpiar Base de Datos</h1>
+        <div class="warning">
+            ⚠️ <strong>Advertencia:</strong> Esta acción eliminará TODOS los datos de ejemplo de la base de datos
+            IndexedDB. Esto no se puede deshacer.
+        </div>
+        <p>Haz clic en el botón de abajo para eliminar todos los socios, lecturas, boletas y pagos de ejemplo.</p>
+        <button onclick="clearDatabase()">Limpiar Base de Datos</button>
+        <div class="success" id="success">
+            ✅ <strong>¡Listo!</strong> Base de datos limpiada correctamente. Ahora recarga la aplicación.
+        </div>
+    </div>
+
+    <script type="module">
+        import { clearAllData } from './src/db/database.js'
+
+        window.clearDatabase = async function () {
+            if (confirm('¿Estás seguro? Esta acción no se puede deshacer.')) {
+                try {
+                    await clearAllData()
+                    document.getElementById('success').style.display = 'block'
+                    setTimeout(() => {
+                        window.location.href = '/'
+                    }, 2000)
+                } catch (error) {
+                    alert('Error: ' + error.message)
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
