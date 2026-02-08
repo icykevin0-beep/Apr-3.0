@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test RAW Supabase</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+        }
+
+        pre {
+            background: #111;
+            padding: 15px;
+            border-left: 4px solid #0f0;
+        }
+
+        .error {
+            color: #f00;
+        }
+
+        .success {
+            color: #0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔬 Test RAW - Sin Cliente Supabase</h1>
+    <div id="result"></div>
+
+    <script>
+        const URL = 'https://ubvbjlymjfinrreydfnm.supabase.co'
+        const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVidmJqbHltamZpbnJyZXlkZm5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0OTA3MzUsImV4cCI6MjA4NjA2NjczNX0.9zjaURc63bFgM8e-jst9rLARH5aFHiEyBFRrbNYJEjo'
+
+        const resultEl = document.getElementById('result')
+
+        async function testRawConnection() {
+            resultEl.innerHTML = '<pre>⏳ Probando conexión RAW con fetch()...</pre>'
+
+            try {
+                console.log('🔍 URL:', URL)
+                console.log('🔍 KEY:', KEY.substring(0, 20) + '...')
+
+                const response = await fetch(`${URL}/rest/v1/organizations?limit=1`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': KEY,
+                        'Authorization': `Bearer ${KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    }
+                })
+
+                console.log('📡 Response status:', response.status)
+                console.log('📡 Response headers:', response.headers)
+
+                if (!response.ok) {
+                    const errorText = await response.text()
+                    throw new Error(`HTTP ${response.status}: ${errorText}`)
+                }
+
+                const data = await response.json()
+                console.log('✅ Data:', data)
+
+                resultEl.innerHTML = `
+                    <pre class="success">✅ ¡CONEXIÓN EXITOSA!</pre>
+                    <pre>Status: ${response.status}
+Datos recibidos: ${JSON.stringify(data, null, 2)}
+
+🎉 La API de Supabase funciona correctamente
+🔍 El problema es el cliente @supabase/supabase-js</pre>
+                `
+            } catch (error) {
+                console.error('❌ Error:', error)
+
+                resultEl.innerHTML = `
+                    <pre class="error">❌ ERROR EN CONEXIÓN RAW:</pre>
+                    <pre>${error.message}
+
+Stack: ${error.stack}
+
+📍 Si este test falla, el problema es:
+- Red/Firewall
+- Credenciales incorrectas
+- CORS en Supabase
+
+📍 Si este test FUNCIONA pero el cliente falla, el problema es:
+- Instalación de @supabase/supabase-js
+- Configuración de Vite</pre>
+                `
+            }
+        }
+
+        // Auto-ejecutar
+        testRawConnection()
+    </script>
+</body>
+
+</html>

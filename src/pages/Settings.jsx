@@ -1,15 +1,21 @@
-import { useState, useEffect } from 'react'
-import { db } from '../db/database'
+import { useState } from 'react'
+import { useOrganization, useUpdateOrganization } from '../hooks/useOrganizations'
+import { useWaterRates, useUpdateWaterRates } from '../hooks/useSettings'
 import './Settings.css'
 
 export default function Settings() {
+    const { data: organization, isLoading: loadingOrg } = useOrganization()
+    const { data: waterRates = [], isLoading: loadingRates } = useWaterRates()
+    const updateOrg = useUpdateOrganization()
+    const updateRates = useUpdateWaterRates()
+
     const [config, setConfig] = useState({
-        nombre: 'APR Villa Los Aromos',
+        name: 'APR Villa Los Aromos',
         rut: '76.000.000-1',
-        direccion: 'Camino Principal 123, Sector Rural',
-        telefono: '+56 9 1234 5678',
+        address: 'Camino Principal 123, Sector Rural',
+        phone: '+56 9 1234 5678',
         email: 'contacto@apraromos.cl',
-        repLegal: 'Juan Pérez'
+        legal_rep: 'Juan Pérez'
     })
 
     const [preferences, setPreferences] = useState({
@@ -25,38 +31,27 @@ export default function Settings() {
         { id: 4, nombre: 'Sobreconsumo', desde: 41, hasta: '∞', precio: 2500 }
     ])
 
-    const handleExportDB = async () => {
-        try {
-            const socios = await db.socios.toArray()
-            const lecturas = await db.lecturas.toArray()
-            const boletas = await db.boletas.toArray()
+    const handleExportDB = () => {
+        alert('🚧 Exportación de datos desde Supabase - Próximamente')
+    }
 
-            const data = { socios, lecturas, boletas, exportDate: new Date().toISOString() }
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-            const url = URL.createObjectURL(blob)
-
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `lumina-apr-backup-${new Date().toISOString().slice(0, 10)}.json`
-            a.click()
-            URL.revokeObjectURL(url)
-        } catch (error) {
-            console.error('Error exporting database:', error)
+    const handleClearData = () => {
+        if (window.confirm('¿Estás seguro de que deseas eliminar todos los datos? Esta acción no se puede deshacer.')) {
+            alert('🚧 Función de limpieza - Próximamente')
         }
     }
 
-    const handleClearData = async () => {
-        if (window.confirm('¿Estás seguro de que deseas eliminar todos los datos? Esta acción no se puede deshacer.')) {
-            try {
-                await db.socios.clear()
-                await db.lecturas.clear()
-                await db.boletas.clear()
-                await db.pagos.clear()
-                alert('Datos eliminados correctamente')
-            } catch (error) {
-                console.error('Error clearing data:', error)
-            }
-        }
+    const isLoading = loadingOrg || loadingRates
+
+    if (isLoading) {
+        return (
+            <div className="settings-page">
+                <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⏳</div>
+                    <p>Cargando configuración...</p>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -87,27 +82,27 @@ export default function Settings() {
                 <div className="info-grid">
                     <div className="info-item">
                         <span className="info-label">Nombre</span>
-                        <span className="info-value">{config.nombre}</span>
+                        <span className="info-value">{organization?.name || config.name}</span>
                     </div>
                     <div className="info-item">
                         <span className="info-label">RUT</span>
-                        <span className="info-value">{config.rut}</span>
+                        <span className="info-value">{organization?.rut || config.rut}</span>
                     </div>
                     <div className="info-item">
                         <span className="info-label">Dirección</span>
-                        <span className="info-value">{config.direccion}</span>
+                        <span className="info-value">{organization?.address || config.address}</span>
                     </div>
                     <div className="info-item">
                         <span className="info-label">Teléfono</span>
-                        <span className="info-value">{config.telefono}</span>
+                        <span className="info-value">{organization?.phone || config.phone}</span>
                     </div>
                     <div className="info-item">
                         <span className="info-label">Email</span>
-                        <span className="info-value">{config.email}</span>
+                        <span className="info-value">{organization?.email || config.email}</span>
                     </div>
                     <div className="info-item">
                         <span className="info-label">Rep. Legal</span>
-                        <span className="info-value">{config.repLegal}</span>
+                        <span className="info-value">{organization?.legal_rep || config.legal_rep}</span>
                     </div>
                 </div>
             </section>

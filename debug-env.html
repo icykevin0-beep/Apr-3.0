@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Environment Variables</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .debug-section {
+            background: #000;
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #0ff;
+            border-bottom: 2px solid #0ff;
+            padding-bottom: 10px;
+        }
+
+        pre {
+            background: #222;
+            padding: 15px;
+            overflow-x: auto;
+            border-left: 4px solid #0f0;
+        }
+
+        .error {
+            color: #f00;
+        }
+
+        .success {
+            color: #0f0;
+        }
+
+        .warning {
+            color: #ff0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Debug: Environment Variables</h1>
+
+    <div class="debug-section">
+        <h2>1. Variables de Entorno Disponibles</h2>
+        <pre id="env-vars"></pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>2. Variables Supabase Específicas</h2>
+        <pre id="supabase-vars"></pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>3. Cliente Supabase</h2>
+        <pre id="supabase-client"></pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>4. Test de Conexión</h2>
+        <pre id="connection-test"></pre>
+    </div>
+
+    <script type="module">
+        // 1. Mostrar TODAS las variables de entorno
+        const envSection = document.getElementById('env-vars')
+        const allEnvVars = import.meta.env
+        envSection.textContent = JSON.stringify(allEnvVars, null, 2)
+
+        // 2. Verificar variables Supabase específicas
+        const supabaseVarsSection = document.getElementById('supabase-vars')
+        const url = import.meta.env.VITE_SUPABASE_URL
+        const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+        supabaseVarsSection.innerHTML = `
+<span class="${url ? 'success' : 'error'}">VITE_SUPABASE_URL: ${url || '❌ NO CONFIGURADA'}</span>
+<span class="${key ? 'success' : 'error'}">VITE_SUPABASE_ANON_KEY: ${key ? '✅ Configurada (' + key.substring(0, 20) + '...)' : '❌ NO CONFIGURADA'}</span>
+`
+
+        // 3. Intentar importar el cliente
+        const clientSection = document.getElementById('supabase-client')
+        try {
+            const { supabase } = await import('./src/lib/supabase.js')
+            clientSection.innerHTML = `<span class="success">✅ Cliente Supabase importado correctamente</span>
+Tipo: ${typeof supabase}
+Tiene método from(): ${typeof supabase?.from === 'function' ? 'Sí' : 'No'}`
+
+            // 4. Test de conexión
+            const testSection = document.getElementById('connection-test')
+            testSection.textContent = '⏳ Probando conexión...'
+
+            const { data, error } = await supabase
+                .from('organizations')
+                .select('*')
+                .limit(1)
+
+            if (error) {
+                testSection.innerHTML = `<span class="error">❌ Error de conexión:</span>
+${JSON.stringify(error, null, 2)}`
+            } else {
+                testSection.innerHTML = `<span class="success">✅ Conexión exitosa!</span>
+Respuesta: ${JSON.stringify(data, null, 2)}`
+            }
+        } catch (error) {
+            clientSection.innerHTML = `<span class="error">❌ Error importando cliente:</span>
+${error.message}
+${error.stack}`
+
+            document.getElementById('connection-test').innerHTML = `<span class="warning">⚠️ No se pudo probar conexión (error al importar cliente)</span>`
+        }
+    </script>
+</body>
+
+</html>

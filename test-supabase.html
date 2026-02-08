@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Supabase Connection</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0a0a0a;
+            color: #fff;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        .status.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+        .status.loading {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1>🧪 Test de Conexión Supabase</h1>
+        <p>Este test verificará que la conexión a Supabase esté funcionando correctamente.</p>
+        
+        <div id="status"></div>
+        <div id="result"></div>
+        
+        <button onclick="testConnection()">Probar Conexión</button>
+    </div>
+
+    <script type="module">
+        import { supabase } from './src/lib/supabase.js'
+        
+        window.testConnection = async function() {
+            const statusEl = document.getElementById('status')
+            const resultEl = document.getElementById('result')
+            
+            statusEl.innerHTML = '<div class="status loading">⏳ Probando conexión...</div>'
+            resultEl.innerHTML = ''
+            
+            try {
+                // Test 1: Verificar variables de entorno
+                console.log('📍 Supabase URL:', import.meta.env.VITE_SUPABASE_URL)
+                console.log('📍 Supabase Key:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ Configurada' : '❌ No configurada')
+                
+                // Test 2: Verificar cliente Supabase
+                if (!supabase) {
+                    throw new Error('Cliente Supabase no inicializado')
+                }
+                
+                // Test 3: Probar consulta a la base de datos
+                const { data, error } = await supabase
+                    .from('organizations')
+                    .select('count')
+                    .limit(1)
+                
+                if (error) {
+                    throw error
+                }
+                
+                // Success!
+                statusEl.innerHTML = '<div class="status success">✅ ¡Conexión exitosa!</div>'
+                resultEl.innerHTML = `
+                    <h3>📊 Resultados del Test:</h3>
+                    <pre>✅ Variables de entorno: OK
+✅ Cliente Supabase: Inicializado
+✅ Conexión a base de datos: OK
+✅ Tabla 'organizations': Accesible
+
+🎉 Todo está funcionando correctamente!</pre>
+                `
+            } catch (error) {
+                statusEl.innerHTML = '<div class="status error">❌ Error de conexión</div>'
+                resultEl.innerHTML = `
+                    <h3>❌ Error:</h3>
+                    <pre>${error.message}</pre>
+                    <h4>Posibles soluciones:</h4>
+                    <ul>
+                        <li>Verifica que el archivo .env.local existe</li>
+                        <li>Verifica que las variables empiezan con VITE_</li>
+                        <li>Reinicia el servidor: npm run dev</li>
+                        <li>Revisa las credenciales en Supabase Dashboard</li>
+                    </ul>
+                `
+                console.error('Error completo:', error)
+            }
+        }
+        
+        // Auto-test al cargar
+        console.log('🚀 Página de test cargada. Click en el botón para probar.')
+    </script>
+</body>
+</html>

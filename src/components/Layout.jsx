@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../contexts/AuthContext'
 import './Layout.css'
 
 const navItems = [
@@ -12,12 +12,12 @@ const navItems = [
 ]
 
 export default function Layout() {
-    const { user, logout } = useAuth()
+    const { user, signOut } = useAuth()
     const navigate = useNavigate()
 
     const handleLogout = () => {
-        logout()
-        navigate('/login')
+        signOut()
+        navigate('/')
     }
 
     return (

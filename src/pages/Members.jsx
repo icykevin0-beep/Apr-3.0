@@ -1,72 +1,59 @@
-import { useState, useEffect } from 'react'
-import { db, notifyDatabaseChange } from '../db/database'
+import { useState } from 'react'
+import { useMembers, useCreateMember } from '../hooks/useMembers'
 import './Members.css'
 
 export default function Members() {
-    const [members, setMembers] = useState([])
+    // React Query hooks
+    const { data: members = [], isLoading, error } = useMembers()
+    const createMember = useCreateMember()
+
+    // Local state for UI
     const [searchTerm, setSearchTerm] = useState('')
     const [filterStatus, setFilterStatus] = useState('todos')
     const [showModal, setShowModal] = useState(false)
     const [newMember, setNewMember] = useState({
         rut: '',
-        nombre: '',
-        direccion: '',
-        medidor: '',
-        telefono: '',
+        name: '',
+        address: '',
+        meter_number: '',
+        phone: '',
         email: ''
     })
 
-    useEffect(() => {
-        loadMembers()
-    }, [])
-
-    async function loadMembers() {
-        try {
-            const socios = await db.socios.toArray()
-            setMembers(socios)
-        } catch (error) {
-            console.error('Error loading members:', error)
-        }
-    }
-
     const filteredMembers = members.filter(member => {
         const matchesSearch =
-            member.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             member.rut?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            member.direccion?.toLowerCase().includes(searchTerm.toLowerCase())
+            member.address?.toLowerCase().includes(searchTerm.toLowerCase())
 
-        const matchesFilter = filterStatus === 'todos' || member.estado === filterStatus
+        const matchesFilter = filterStatus === 'todos' || member.status === filterStatus
 
         return matchesSearch && matchesFilter
     })
 
     const stats = {
         total: members.length,
-        activos: members.filter(m => m.estado === 'activo').length,
-        morosos: members.filter(m => m.estado === 'moroso').length,
-        inactivos: members.filter(m => m.estado === 'inactivo').length
+        activos: members.filter(m => m.status === 'active').length,
+        morosos: members.filter(m => m.status === 'overdue').length,
+        inactivos: members.filter(m => m.status === 'inactive').length
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('📝 Submitting new member:', newMember)
 
         try {
-            const id = await db.socios.add({
-                ...newMember,
-                estado: 'activo',
-                fechaCreacion: new Date().toISOString()
+            await createMember.mutateAsync({
+                rut: newMember.rut,
+                name: newMember.name,
+                address: newMember.address,
+                meter_number: newMember.meter_number,
+                phone: newMember.phone,
+                email: newMember.email,
+                status: 'active'
             })
-            console.log('✅ Member added successfully with ID:', id)
 
             setShowModal(false)
-            setNewMember({ rut: '', nombre: '', direccion: '', medidor: '', telefono: '', email: '' })
-            await loadMembers()
-
-            // Notify other components (like Dashboard) that data changed
-            notifyDatabaseChange('socios', 'add')
-
-            // Show success notification
+            setNewMember({ rut: '', name: '', address: '', meter_number: '', phone: '', email: '' })
             alert('✅ Socio agregado correctamente')
         } catch (error) {
             console.error('❌ Error adding member:', error)
@@ -80,15 +67,39 @@ export default function Members() {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'activo':
+            case 'active':
                 return <span className="status-badge active"><span className="status-dot"></span>Activo</span>
-            case 'moroso':
+            case 'overdue':
                 return <span className="status-badge overdue"><span className="status-dot"></span>Moroso</span>
-            case 'inactivo':
+            case 'inactive':
                 return <span className="status-badge inactive"><span className="status-dot"></span>Inactivo</span>
             default:
                 return <span className="status-badge">{status}</span>
         }
+    }
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="members-page">
+                <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⏳</div>
+                    <p>Cargando socios...</p>
+                </div>
+            </div>
+        )
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="members-page">
+                <div style={{ textAlign: 'center', padding: '4rem', color: '#ef4444' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
+                    <p>Error al cargar socios: {error.message}</p>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -169,9 +180,9 @@ export default function Members() {
                     <div className="filter-select">
                         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                             <option value="todos">Estado: Todos</option>
-                            <option value="activo">Activos</option>
-                            <option value="moroso">Morosos</option>
-                            <option value="inactivo">Inactivos</option>
+                            <option value="active">Activos</option>
+                            <option value="overdue">Morosos</option>
+                            <option value="inactive">Inactivos</option>
                         </select>
                         <span className="material-symbols-outlined">expand_more</span>
                     </div>
@@ -203,16 +214,16 @@ export default function Members() {
                                     <td className="font-mono">{member.rut}</td>
                                     <td>
                                         <div className="member-cell">
-                                            <div className="avatar">{getInitials(member.nombre)}</div>
+                                            <div className="avatar">{getInitials(member.name)}</div>
                                             <div className="member-info">
-                                                <span className="member-name">{member.nombre}</span>
+                                                <span className="member-name">{member.name}</span>
                                                 <span className="member-email">{member.email || 'Sin email'}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="text-muted">{member.direccion}</td>
-                                    <td className="font-mono text-cyan">{member.medidor}</td>
-                                    <td className="center">{getStatusBadge(member.estado)}</td>
+                                    <td className="text-muted">{member.address}</td>
+                                    <td className="font-mono text-cyan">{member.meter_number}</td>
+                                    <td className="center">{getStatusBadge(member.status)}</td>
                                     <td className="right">
                                         <div className="row-actions">
                                             <button className="action-btn" title="Ver detalle">
@@ -269,8 +280,8 @@ export default function Members() {
                                         <input
                                             type="text"
                                             placeholder="Juan Pérez"
-                                            value={newMember.nombre}
-                                            onChange={e => setNewMember({ ...newMember, nombre: e.target.value })}
+                                            value={newMember.name}
+                                            onChange={e => setNewMember({ ...newMember, name: e.target.value })}
                                             required
                                         />
                                     </div>
@@ -279,8 +290,8 @@ export default function Members() {
                                         <input
                                             type="text"
                                             placeholder="Av. Principal 123"
-                                            value={newMember.direccion}
-                                            onChange={e => setNewMember({ ...newMember, direccion: e.target.value })}
+                                            value={newMember.address}
+                                            onChange={e => setNewMember({ ...newMember, address: e.target.value })}
                                             required
                                         />
                                     </div>
@@ -289,8 +300,8 @@ export default function Members() {
                                         <input
                                             type="text"
                                             placeholder="MED-001"
-                                            value={newMember.medidor}
-                                            onChange={e => setNewMember({ ...newMember, medidor: e.target.value })}
+                                            value={newMember.meter_number}
+                                            onChange={e => setNewMember({ ...newMember, meter_number: e.target.value })}
                                             required
                                         />
                                     </div>
@@ -299,8 +310,8 @@ export default function Members() {
                                         <input
                                             type="tel"
                                             placeholder="+56 9 1234 5678"
-                                            value={newMember.telefono}
-                                            onChange={e => setNewMember({ ...newMember, telefono: e.target.value })}
+                                            value={newMember.phone}
+                                            onChange={e => setNewMember({ ...newMember, phone: e.target.value })}
                                         />
                                     </div>
                                     <div className="form-group full-width">
@@ -318,9 +329,9 @@ export default function Members() {
                                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
                                     Cancelar
                                 </button>
-                                <button type="submit" className="btn-primary">
+                                <button type="submit" className="btn-primary" disabled={createMember.isPending}>
                                     <span className="material-symbols-outlined">save</span>
-                                    Guardar Socio
+                                    {createMember.isPending ? 'Guardando...' : 'Guardar Socio'}
                                 </button>
                             </div>
                         </form>

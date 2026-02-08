@@ -1,140 +1,90 @@
-import { useState, useEffect } from 'react'
-import { db, onDatabaseChange } from '../db/database'
+import { useMemo } from 'react'
+import { useMembers } from '../hooks/useMembers'
+import { useReadings } from '../hooks/useReadings'
+import { useInvoices } from '../hooks/useBilling'
 import './Dashboard.css'
 
 export default function Dashboard() {
-    const [stats, setStats] = useState({
-        totalSocios: 0,
-        consumoMensual: 0,
-        recaudacion: 0,
-        lecturasPendientes: 0
-    })
-    const [activities, setActivities] = useState([])
+    // Fetch data from Supabase using React Query
+    const { data: members = [], isLoading: loadingMembers } = useMembers()
+    const { data: readings = [], isLoading: loadingReadings } = useReadings()
+    const { data: invoices = [], isLoading: loadingInvoices } = useInvoices()
 
-    // Debug: Track activities changes
-    useEffect(() => {
-        console.log('🎯 Activities state changed to:', activities.length, 'items')
-    }, [activities])
+    // Calculate stats from real data
+    const stats = useMemo(() => {
+        const totalConsumo = readings.reduce((sum, r) => sum + (r.consumption || 0), 0)
+        const paidInvoices = invoices.filter(inv => inv.status === 'paid')
+        const totalRecaudacion = paidInvoices.reduce((sum, inv) => sum + (inv.amount || 0), 0)
+        const activeMembers = members.filter(m => m.status === 'active').length
 
-    useEffect(() => {
-        async function loadData() {
-            try {
-                const socios = await db.socios.count()
-                const lecturas = await db.lecturas.toArray()
-                const boletas = await db.boletas.toArray()
-
-                const totalConsumo = lecturas.reduce((sum, l) => sum + (l.consumo || 0), 0)
-                const totalRecaudacion = boletas
-                    .filter(b => b.estado === 'pagado')
-                    .reduce((sum, b) => sum + b.monto, 0)
-                const pendientes = await db.socios.filter(s => s.estado === 'activo').count()
-
-                setStats({
-                    totalSocios: socios,
-                    consumoMensual: totalConsumo,
-                    recaudacion: totalRecaudacion,
-                    lecturasPendientes: Math.max(0, pendientes - lecturas.length)
-                })
-
-                // Load real activities from database
-                await loadRecentActivities()
-            } catch (error) {
-                console.error('Error loading dashboard data:', error)
-            }
+        return {
+            totalSocios: members.length,
+            consumoMensual: totalConsumo,
+            recaudacion: totalRecaudacion,
+            lecturasPendientes: Math.max(0, activeMembers - readings.length)
         }
+    }, [members, readings, invoices])
 
-        loadData()
+    // Generate recent activities from all data
+    const activities = useMemo(() => {
+        const allActivities = []
 
-        // Listen for database changes and reload
-        const unsubscribe = onDatabaseChange((event) => {
-            console.log('🔄 Database changed:', event)
-            loadData()
-        })
-
-        return () => unsubscribe()
-    }, [])
-
-    async function loadRecentActivities() {
-        try {
-            const allActivities = []
-
-            // Get recent members (all, then sort in JS since fechaCreacion might not be indexed)
-            const allMembers = await db.socios.toArray()
-            const recentMembers = allMembers
-                .filter(m => m.fechaCreacion) // Only members with creation date
-                .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion))
-                .slice(0, 10)
-
-            console.log('📊 Recent members:', recentMembers.length)
-
-            recentMembers.forEach(member => {
+        // Recent members
+        members
+            .filter(m => m.created_at)
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .slice(0, 5)
+            .forEach(member => {
                 allActivities.push({
                     id: `member-${member.id}`,
                     type: 'member',
                     user: 'Admin',
                     action: 'agregó nuevo socio',
-                    amount: member.nombre,
-                    timestamp: new Date(member.fechaCreacion),
-                    time: getRelativeTime(new Date(member.fechaCreacion))
+                    amount: member.name,
+                    timestamp: new Date(member.created_at),
+                    time: getRelativeTime(new Date(member.created_at))
                 })
             })
 
-            // Get recent readings (all, then sort in JS)
-            const allReadings = await db.lecturas.toArray()
-            const recentReadings = allReadings
-                .filter(r => r.fecha)
-                .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-                .slice(0, 10)
-
-            for (const reading of recentReadings) {
-                const socio = await db.socios.get(reading.socioId)
+        // Recent readings
+        readings
+            .filter(r => r.reading_date)
+            .sort((a, b) => new Date(b.reading_date) - new Date(a.reading_date))
+            .slice(0, 5)
+            .forEach(reading => {
                 allActivities.push({
                     id: `reading-${reading.id}`,
                     type: 'reading',
-                    user: socio?.nombre || 'Usuario',
+                    user: reading.member?.name || 'Usuario',
                     action: 'registró lectura',
-                    amount: `${reading.consumo || 0} m³`,
-                    timestamp: new Date(reading.fecha),
-                    time: getRelativeTime(new Date(reading.fecha))
+                    amount: `${reading.consumption || 0} m³`,
+                    timestamp: new Date(reading.reading_date),
+                    time: getRelativeTime(new Date(reading.reading_date))
                 })
-            }
+            })
 
-            // Get recent payments (all, then sort in JS)
-            const allPayments = await db.pagos.toArray()
-            const recentPayments = allPayments
-                .filter(p => p.fechaPago)
-                .sort((a, b) => new Date(b.fechaPago) - new Date(a.fechaPago))
-                .slice(0, 10)
-
-            for (const payment of recentPayments) {
-                const boleta = await db.boletas.get(payment.boletaId)
-                const socio = await db.socios.get(boleta?.socioId || payment.socioId)
+        // Recent paid invoices
+        invoices
+            .filter(inv => inv.status === 'paid' && inv.paid_at)
+            .sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at))
+            .slice(0, 5)
+            .forEach(invoice => {
                 allActivities.push({
-                    id: `payment-${payment.id}`,
+                    id: `payment-${invoice.id}`,
                     type: 'payment',
-                    user: socio?.nombre || 'Usuario',
+                    user: invoice.member?.name || 'Usuario',
                     action: 'realizó un pago',
-                    amount: `$${payment.monto.toLocaleString()}`,
-                    timestamp: new Date(payment.fechaPago),
-                    time: getRelativeTime(new Date(payment.fechaPago))
+                    amount: `$${(invoice.amount || 0).toLocaleString()}`,
+                    timestamp: new Date(invoice.paid_at),
+                    time: getRelativeTime(new Date(invoice.paid_at))
                 })
-            }
+            })
 
-            // Sort all activities by timestamp (most recent first) and take top 10
-            allActivities.sort((a, b) => b.timestamp - a.timestamp)
-            const topActivities = allActivities.slice(0, 10)
-
-            console.log('📊 Total activities loaded:', topActivities.length)
-            if (topActivities.length > 0) {
-                console.table(topActivities.map(a => ({ user: a.user, action: a.action, amount: a.amount, time: a.time })))
-            }
-            setActivities(topActivities)
-
-        } catch (error) {
-            console.error('❌ Error loading activities:', error)
-            setActivities([])
-        }
-    }
+        // Sort by most recent and take top 10
+        return allActivities
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .slice(0, 10)
+    }, [members, readings, invoices])
 
     function getRelativeTime(date) {
         const now = new Date()
@@ -170,6 +120,19 @@ export default function Dashboard() {
         }
     }
 
+    // Loading state
+    const isLoading = loadingMembers || loadingReadings || loadingInvoices
+    if (isLoading) {
+        return (
+            <div className="dashboard">
+                <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⏳</div>
+                    <p>Cargando dashboard...</p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="dashboard">
             {/* Page Header */}
@@ -198,18 +161,14 @@ export default function Dashboard() {
                 {/* Total Socios */}
                 <div className="stat-card group">
                     <div className="stat-icon-bg blue">
-                        <div className="stat-icon-inner blue">
-                            <span className="material-symbols-outlined">groups</span>
-                        </div>
+                        <span className="material-symbols-outlined">groups</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Total Socios</span>
-                        <div className="stat-value-row">
-                            <span className="stat-value">{stats.totalSocios}</span>
-                            <span className="stat-badge positive">
-                                <span className="material-symbols-outlined">trending_up</span>
-                                +2 este mes
-                            </span>
+                        <span className="stat-value">{stats.totalSocios}</span>
+                        <div className="stat-trend success">
+                            <span className="material-symbols-outlined">trending_up</span>
+                            <span>+12% vs mes anterior</span>
                         </div>
                     </div>
                 </div>
@@ -217,18 +176,14 @@ export default function Dashboard() {
                 {/* Consumo Mensual */}
                 <div className="stat-card group">
                     <div className="stat-icon-bg cyan">
-                        <div className="stat-icon-inner cyan">
-                            <span className="material-symbols-outlined">water_drop</span>
-                        </div>
+                        <span className="material-symbols-outlined">water_drop</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Consumo Mensual</span>
-                        <div className="stat-value-row">
-                            <span className="stat-value">{stats.consumoMensual.toLocaleString()} m³</span>
-                            <span className="stat-badge neutral">
-                                <span className="material-symbols-outlined">trending_flat</span>
-                                Normal
-                            </span>
+                        <span className="stat-value">{stats.consumoMensual.toLocaleString()} m³</span>
+                        <div className="stat-trend warning">
+                            <span className="material-symbols-outlined">trending_up</span>
+                            <span>+5% vs mes anterior</span>
                         </div>
                     </div>
                 </div>
@@ -236,18 +191,14 @@ export default function Dashboard() {
                 {/* Recaudación */}
                 <div className="stat-card group">
                     <div className="stat-icon-bg emerald">
-                        <div className="stat-icon-inner emerald">
-                            <span className="material-symbols-outlined">payments</span>
-                        </div>
+                        <span className="material-symbols-outlined">payments</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Recaudación</span>
-                        <div className="stat-value-row">
-                            <span className="stat-value">${stats.recaudacion.toLocaleString()}</span>
-                            <span className="stat-badge positive">
-                                <span className="material-symbols-outlined">trending_up</span>
-                                +12%
-                            </span>
+                        <span className="stat-value">${stats.recaudacion.toLocaleString()}</span>
+                        <div className="stat-trend success">
+                            <span className="material-symbols-outlined">trending_up</span>
+                            <span>+18% vs mes anterior</span>
                         </div>
                     </div>
                 </div>
@@ -255,139 +206,38 @@ export default function Dashboard() {
                 {/* Lecturas Pendientes */}
                 <div className="stat-card group">
                     <div className="stat-icon-bg amber">
-                        <div className="stat-icon-inner amber">
-                            <span className="material-symbols-outlined">pending_actions</span>
-                        </div>
+                        <span className="material-symbols-outlined">pending_actions</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Lecturas Pendientes</span>
-                        <div className="stat-value-row">
-                            <span className="stat-value">{stats.lecturasPendientes}</span>
-                            <span className="stat-badge warning">
-                                <span className="material-symbols-outlined">schedule</span>
-                                Por registrar
-                            </span>
+                        <span className="stat-value">{stats.lecturasPendientes}</span>
+                        <div className="stat-trend neutral">
+                            <span className="material-symbols-outlined">schedule</span>
+                            <span>En proceso</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Charts Section */}
-            <div className="charts-grid">
-                {/* Monthly Consumption Chart */}
-                <div className="chart-card main-chart">
-                    <div className="chart-header">
-                        <h3 className="chart-title">Consumo Mensual</h3>
-                        <div className="chart-legend">
-                            <div className="legend-item">
-                                <span className="legend-dot blue"></span>
-                                <span>Consumo (m³)</span>
-                            </div>
+            {/* Main Content Grid */}
+            <div className="dashboard-content">
+                {/* Activity Feed */}
+                <div className="activity-panel glass-panel">
+                    <div className="panel-header">
+                        <div className="panel-title">
+                            <span className="material-symbols-outlined">history</span>
+                            <h2>Actividad Reciente</h2>
                         </div>
-                    </div>
-                    <div className="chart-body">
-                        {/* SVG Bar Chart */}
-                        <svg className="bar-chart" viewBox="0 0 600 200" preserveAspectRatio="xMidYMid meet">
-                            <defs>
-                                <linearGradient id="barGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stopColor="#4facfe" />
-                                    <stop offset="100%" stopColor="#00f2fe" />
-                                </linearGradient>
-                            </defs>
-                            {/* Grid lines */}
-                            <g className="grid-lines">
-                                <line x1="40" y1="20" x2="580" y2="20" stroke="#374151" strokeWidth="1" strokeDasharray="4" />
-                                <line x1="40" y1="60" x2="580" y2="60" stroke="#374151" strokeWidth="1" strokeDasharray="4" />
-                                <line x1="40" y1="100" x2="580" y2="100" stroke="#374151" strokeWidth="1" strokeDasharray="4" />
-                                <line x1="40" y1="140" x2="580" y2="140" stroke="#374151" strokeWidth="1" strokeDasharray="4" />
-                            </g>
-                            {/* Bars */}
-                            <g className="bars">
-                                <rect x="60" y="80" width="32" height="100" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="110" y="60" width="32" height="120" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="160" y="90" width="32" height="90" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="210" y="50" width="32" height="130" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="260" y="70" width="32" height="110" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="310" y="40" width="32" height="140" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="360" y="55" width="32" height="125" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="410" y="75" width="32" height="105" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="460" y="45" width="32" height="135" fill="url(#barGradient)" rx="4" className="bar" />
-                                <rect x="510" y="30" width="32" height="150" fill="url(#barGradient)" rx="4" className="bar" />
-                            </g>
-                            {/* X-axis labels */}
-                            <g className="x-labels" fill="#9ca3af" fontSize="10">
-                                <text x="76" y="195" textAnchor="middle">May</text>
-                                <text x="126" y="195" textAnchor="middle">Jun</text>
-                                <text x="176" y="195" textAnchor="middle">Jul</text>
-                                <text x="226" y="195" textAnchor="middle">Ago</text>
-                                <text x="276" y="195" textAnchor="middle">Sep</text>
-                                <text x="326" y="195" textAnchor="middle">Oct</text>
-                                <text x="376" y="195" textAnchor="middle">Nov</text>
-                                <text x="426" y="195" textAnchor="middle">Dic</text>
-                                <text x="476" y="195" textAnchor="middle">Ene</text>
-                                <text x="526" y="195" textAnchor="middle">Feb</text>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-
-                {/* Distribution Chart */}
-                <div className="chart-card side-chart">
-                    <div className="chart-header">
-                        <h3 className="chart-title">Distribución por Consumo</h3>
-                        <button className="chart-menu">
-                            <span className="material-symbols-outlined">more_horiz</span>
-                        </button>
-                    </div>
-                    <div className="doughnut-container">
-                        <div className="doughnut-chart">
-                            <div className="doughnut-inner">
-                                <span className="doughnut-value">142</span>
-                                <span className="doughnut-label">Socios</span>
-                            </div>
-                        </div>
-                        <div className="doughnut-legend">
-                            <div className="legend-row">
-                                <span className="legend-color blue"></span>
-                                <span className="legend-text">Bajo (0-10 m³)</span>
-                                <span className="legend-value">45%</span>
-                            </div>
-                            <div className="legend-row">
-                                <span className="legend-color cyan"></span>
-                                <span className="legend-text">Normal (11-20 m³)</span>
-                                <span className="legend-value">35%</span>
-                            </div>
-                            <div className="legend-row">
-                                <span className="legend-color amber"></span>
-                                <span className="legend-text">Alto (21-30 m³)</span>
-                                <span className="legend-value">15%</span>
-                            </div>
-                            <div className="legend-row">
-                                <span className="legend-color red"></span>
-                                <span className="legend-text">Muy Alto ({">"} 30 m³)</span>
-                                <span className="legend-value">5%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Recent Activity */}
-            <div className="activity-section">
-                <div className="glass-card">
-                    <div className="card-header">
-                        <h3 className="card-title">Actividad Reciente</h3>
-                        <a href="#" className="view-all-link">
+                        <button className="view-all-btn">
                             Ver todo
                             <span className="material-symbols-outlined">arrow_forward</span>
-                        </a>
+                        </button>
                     </div>
                     <div className="activity-list">
                         {activities.length === 0 ? (
-                            <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
-                                <span className="material-symbols-outlined" style={{ fontSize: '3rem', opacity: 0.3, display: 'block', marginBottom: '1rem' }}>inbox</span>
+                            <div className="empty-state">
+                                <span className="material-symbols-outlined">inbox</span>
                                 <p>No hay actividad reciente</p>
-                                <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>La actividad se mostrará aquí cuando realices acciones</p>
                             </div>
                         ) : (
                             activities.map(activity => (
@@ -395,15 +245,47 @@ export default function Dashboard() {
                                     <div className={`activity-icon ${getActivityColor(activity.type)}`}>
                                         <span className="material-symbols-outlined">{getActivityIcon(activity.type)}</span>
                                     </div>
-                                    <div className="activity-content">
+                                    <div className="activity-info">
                                         <p className="activity-text">
-                                            <strong>{activity.user}</strong> {activity.action} <span className="highlight">{activity.amount}</span>
+                                            <span className="user-name">{activity.user}</span>
+                                            <span className="action-text"> {activity.action}</span>
                                         </p>
-                                        <span className="activity-time">{activity.time}</span>
+                                        <p className="activity-meta">
+                                            <span className="amount">{activity.amount}</span>
+                                            <span className="time">{activity.time}</span>
+                                        </p>
                                     </div>
                                 </div>
                             ))
                         )}
+                    </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="actions-panel glass-panel">
+                    <div className="panel-header">
+                        <div className="panel-title">
+                            <span className="material-symbols-outlined">bolt</span>
+                            <h2>Acciones Rápidas</h2>
+                        </div>
+                    </div>
+                    <div className="actions-grid">
+                        <button className="action-card blue">
+                            <span className="material-symbols-outlined">person_add</span>
+                            <span>Nuevo Socio</span>
+                        </button>
+                        <button className="action-card cyan">
+                            <span className="material-symbols-outlined">upload</span>
+                            <span>Importar Lecturas</span>
+                        </button>
+                        <button className="action-card emerald">
+                            <span className="material-symbols-outlined">receipt_long</span>
+                            <span>Generar Boletas</span>
+                        </button>
+                        <button className="action-card purple">
+                            <span className="material-symbols-outlined">analytics</span>
+                            <span>Ver Reportes</span>
+                        </button>
                     </div>
                 </div>
             </div>

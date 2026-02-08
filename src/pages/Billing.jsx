@@ -1,70 +1,70 @@
-import { useState, useEffect } from 'react'
-import { db } from '../db/database'
+import { useState, useMemo } from 'react'
+import { useMembers } from '../hooks/useMembers'
+import { useInvoices } from '../hooks/useBilling'
 import './Billing.css'
 
 export default function Billing() {
-    const [boletas, setBoletas] = useState([])
-    const [members, setMembers] = useState([])
-    const [tarifas, setTarifas] = useState([])
+    const { data: invoices = [], isLoading: loadingInvoices } = useInvoices()
+    const { data: members = [], isLoading: loadingMembers } = useMembers()
+
     const [filterStatus, setFilterStatus] = useState('todos')
     const [filterPeriod, setFilterPeriod] = useState('febrero')
 
-    useEffect(() => {
-        loadData()
-    }, [])
-
-    async function loadData() {
-        try {
-            const b = await db.boletas.toArray()
-            const s = await db.socios.toArray()
-            const t = await db.tarifas.toArray()
-            setBoletas(b)
-            setMembers(s)
-            setTarifas(t)
-        } catch (error) {
-            console.error('Error loading data:', error)
-        }
+    const getMemberName = (memberId) => {
+        return members.find(m => m.id === memberId)?.name || 'Desconocido'
     }
 
-    const getMemberName = (socioId) => {
-        return members.find(m => m.id === socioId)?.nombre || 'Desconocido'
-    }
-
-    const getMemberRut = (socioId) => {
-        return members.find(m => m.id === socioId)?.rut || '-'
+    const getMemberRut = (memberId) => {
+        return members.find(m => m.id === memberId)?.rut || '-'
     }
 
     const getInitials = (name) => {
         return name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '??'
     }
 
-    const stats = {
-        totalFacturado: boletas.reduce((sum, b) => sum + b.monto, 0),
-        cobrado: boletas.filter(b => b.estado === 'pagado').reduce((sum, b) => sum + b.monto, 0),
-        porCobrar: boletas.filter(b => b.estado === 'pendiente').reduce((sum, b) => sum + b.monto, 0),
-        morosos: boletas.filter(b => b.estado === 'moroso').length
-    }
+    const stats = useMemo(() => {
+        const totalFacturado = invoices.reduce((sum, inv) => sum + (inv.amount || 0), 0)
+        const paidInvoices = invoices.filter(inv => inv.status === 'paid')
+        const cobrado = paidInvoices.reduce((sum, inv) => sum + (inv.amount || 0), 0)
+        const porCobrar = invoices.filter(inv => inv.status === 'pending').reduce((sum, inv) => sum + (inv.amount || 0), 0)
+        const morosos = invoices.filter(inv => inv.status === 'overdue').length
+
+        return { totalFacturado, cobrado, porCobrar, morosos }
+    }, [invoices])
 
     const cobroPorcentaje = stats.totalFacturado > 0
         ? Math.round((stats.cobrado / stats.totalFacturado) * 100)
         : 0
 
-    const filteredBoletas = boletas.filter(b => {
-        if (filterStatus !== 'todos' && b.estado !== filterStatus) return false
+    const filteredInvoices = invoices.filter(inv => {
+        if (filterStatus !== 'todos' && inv.status !== filterStatus) return false
         return true
     })
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'pagado':
+            case 'paid':
                 return <span className="status-badge paid"><span className="dot"></span>Pagado</span>
-            case 'pendiente':
+            case 'pending':
                 return <span className="status-badge pending"><span className="dot"></span>Pendiente</span>
-            case 'moroso':
+            case 'overdue':
                 return <span className="status-badge overdue"><span className="dot"></span>Moroso</span>
             default:
                 return <span className="status-badge">{status}</span>
         }
+    }
+
+    const isLoading = loadingInvoices || loadingMembers
+
+    if (isLoading) {
+        return (
+            <div className="billing-page">
+                <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⏳</div>
+                    <p>Cargando facturación...</p>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -175,9 +175,9 @@ export default function Billing() {
                             <div className="filter-select">
                                 <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
                                     <option value="todos">Estado: Todos</option>
-                                    <option value="pagado">Pagado</option>
-                                    <option value="pendiente">Pendiente</option>
-                                    <option value="moroso">Moroso</option>
+                                    <option value="paid">Pagado</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="overdue">Moroso</option>
                                 </select>
                                 <span className="material-symbols-outlined">expand_more</span>
                             </div>
@@ -191,7 +191,7 @@ export default function Billing() {
                             </div>
                         </div>
                         <span className="filter-info">
-                            Mostrando <strong>{filteredBoletas.length}</strong> de <strong>{boletas.length}</strong> registros
+                            Mostrando <strong>{filteredInvoices.length}</strong> de <strong>{invoices.length}</strong> registros
                         </span>
                     </div>
 
@@ -210,25 +210,25 @@ export default function Billing() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredBoletas.map((boleta, index) => (
-                                    <tr key={boleta.id} className="table-row">
+                                {filteredInvoices.map((invoice, index) => (
+                                    <tr key={invoice.id} className="table-row">
                                         <td className="text-muted">{1024 + index}</td>
-                                        <td className="font-mono">{getMemberRut(boleta.socioId)}</td>
+                                        <td className="font-mono">{getMemberRut(invoice.member_id)}</td>
                                         <td>
                                             <div className="member-cell">
-                                                <div className="avatar">{getInitials(getMemberName(boleta.socioId))}</div>
-                                                <span className="member-name">{getMemberName(boleta.socioId)}</span>
+                                                <div className="avatar">{getInitials(getMemberName(invoice.member_id))}</div>
+                                                <span className="member-name">{getMemberName(invoice.member_id)}</span>
                                             </div>
                                         </td>
-                                        <td className="right text-muted">{boleta.consumo || 0} m³</td>
-                                        <td className="right font-bold">${boleta.monto?.toLocaleString()}</td>
-                                        <td className="center">{getStatusBadge(boleta.estado)}</td>
+                                        <td className="right text-muted">{invoice.consumption || 0} m³</td>
+                                        <td className="right font-bold">${invoice.amount?.toLocaleString()}</td>
+                                        <td className="center">{getStatusBadge(invoice.status)}</td>
                                         <td className="right">
                                             <div className="row-actions">
                                                 <button className="action-btn" title="Ver detalle">
                                                     <span className="material-symbols-outlined">visibility</span>
                                                 </button>
-                                                {boleta.estado === 'pagado' ? (
+                                                {invoice.status === 'paid' ? (
                                                     <button className="action-btn success" title="Ver Comprobante">
                                                         <span className="material-symbols-outlined">receipt_long</span>
                                                     </button>
@@ -271,7 +271,7 @@ export default function Billing() {
                                 <span className="tariff-price">$1.200 /m³</span>
                             </div>
                             <div className="tariff-item">
-                                <span className="tariff-range">{"> "}30 m³</span>
+                                <span className="tariff-range">&gt; 30 m³</span>
                                 <span className="tariff-price">$2.000 /m³</span>
                             </div>
                         </div>
@@ -300,12 +300,12 @@ export default function Billing() {
                             <div className="legend-row">
                                 <span className="legend-dot blue"></span>
                                 <span className="legend-text">Pagado</span>
-                                <span className="legend-value">{boletas.filter(b => b.estado === 'pagado').length}</span>
+                                <span className="legend-value">{invoices.filter(inv => inv.status === 'paid').length}</span>
                             </div>
                             <div className="legend-row">
                                 <span className="legend-dot amber"></span>
                                 <span className="legend-text">Pendiente</span>
-                                <span className="legend-value">{boletas.filter(b => b.estado === 'pendiente').length}</span>
+                                <span className="legend-value">{invoices.filter(inv => inv.status === 'pending').length}</span>
                             </div>
                             <div className="legend-row">
                                 <span className="legend-dot red"></span>
@@ -313,44 +313,6 @@ export default function Billing() {
                                 <span className="legend-value">{stats.morosos}</span>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Upcoming Due Dates */}
-                    <div className="sidebar-card glass-panel">
-                        <h3>Próximos Vencimientos</h3>
-                        <div className="due-list">
-                            <div className="due-item">
-                                <div className="due-icon amber">
-                                    <span className="material-symbols-outlined">calendar_clock</span>
-                                </div>
-                                <div className="due-info">
-                                    <span className="due-name">María López</span>
-                                    <span className="due-date">Vence: Mañana</span>
-                                </div>
-                                <span className="due-amount">$18.200</span>
-                            </div>
-                            <div className="due-item">
-                                <div className="due-icon">
-                                    <span className="material-symbols-outlined">event</span>
-                                </div>
-                                <div className="due-info">
-                                    <span className="due-name">Ana María</span>
-                                    <span className="due-date">Vence: 28 Feb</span>
-                                </div>
-                                <span className="due-amount">$22.450</span>
-                            </div>
-                            <div className="due-item">
-                                <div className="due-icon">
-                                    <span className="material-symbols-outlined">event</span>
-                                </div>
-                                <div className="due-info">
-                                    <span className="due-name">Josefa Díaz</span>
-                                    <span className="due-date">Vence: 28 Feb</span>
-                                </div>
-                                <span className="due-amount">$8.900</span>
-                            </div>
-                        </div>
-                        <button className="view-all-btn">Ver todos</button>
                     </div>
                 </div>
             </div>
