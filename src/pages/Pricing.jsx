@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './Pricing.css'
 
 export default function Pricing() {
     const [billingCycle, setBillingCycle] = useState('monthly')
@@ -115,56 +116,42 @@ export default function Pricing() {
                     </div>
 
                     {/* Plan Profesional */}
-                    <div className="flex flex-col p-8 rounded-xl shadow-2xl relative scale-105 z-10 hover:translate-y-[-4px] transition-all duration-300 bg-gradient-to-br from-[#2590f4] to-[#6366f1] text-white overflow-hidden">
-                        {/* Circle decorations */}
-                        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-10 blur-2xl pointer-events-none"></div>
-                        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-white opacity-10 blur-2xl pointer-events-none"></div>
-
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-white text-primary text-[10px] font-black uppercase tracking-widest py-1 px-4 rounded-b-lg shadow-sm">
+                    <div className="gradient-border glass-card flex flex-col p-8 rounded-xl shadow-2xl relative scale-105 z-10 hover:translate-y-[-4px] transition-all duration-300">
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-purple-500 text-white text-[10px] font-black uppercase tracking-widest py-1 px-4 rounded-full shadow-lg">
                             Recomendado
                         </div>
-                        <div className="mb-8 relative z-10">
+                        <div className="mb-8">
                             <h3 className="text-lg font-bold mb-2">Plan Profesional</h3>
-                            <p className="text-blue-100 text-sm mb-6">La solución completa para la gestión operativa y legal.</p>
+                            <p className="text-slate-500 text-sm mb-6">La solución completa para la gestión operativa y legal.</p>
                             <div className="flex items-baseline gap-1">
-                                <span className="text-4xl font-black">
+                                <span className="text-4xl font-black text-primary">
                                     {billingCycle === 'yearly' ? '$24.000' : '$30.000'}
                                 </span>
-                                <span className="text-blue-100 font-bold">/mes</span>
+                                <span className="text-slate-500 font-bold">/mes</span>
                             </div>
                         </div>
-                        <button className="w-full py-3 px-4 mb-8 rounded-lg bg-white text-primary font-bold text-sm hover:bg-blue-50 transition-all shadow-lg relative z-10">
+                        <button className="w-full py-3 px-4 mb-8 rounded-lg bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/30">
                             Seleccionar Plan
                         </button>
-                        <ul className="space-y-4 flex-1 relative z-10">
+                        <ul className="space-y-4 flex-1">
                             <li className="flex items-start gap-3 text-sm">
-                                <div className="bg-white/20 p-1 rounded-full">
-                                    <span className="material-symbols-outlined text-white !text-sm font-bold">check</span>
-                                </div>
+                                <span className="material-symbols-outlined text-green-500 font-bold">check_circle</span>
                                 <span className="font-semibold">Socios ilimitados</span>
                             </li>
                             <li className="flex items-start gap-3 text-sm">
-                                <div className="bg-white/20 p-1 rounded-full">
-                                    <span className="material-symbols-outlined text-white !text-sm font-bold">check</span>
-                                </div>
+                                <span className="material-symbols-outlined text-green-500 font-bold">check_circle</span>
                                 <span>Integración Facturación Electrónica SII</span>
                             </li>
                             <li className="flex items-start gap-3 text-sm">
-                                <div className="bg-white/20 p-1 rounded-full">
-                                    <span className="material-symbols-outlined text-white !text-sm font-bold">check</span>
-                                </div>
+                                <span className="material-symbols-outlined text-green-500 font-bold">check_circle</span>
                                 <span>Automatización de cobranza</span>
                             </li>
                             <li className="flex items-start gap-3 text-sm">
-                                <div className="bg-white/20 p-1 rounded-full">
-                                    <span className="material-symbols-outlined text-white !text-sm font-bold">check</span>
-                                </div>
+                                <span className="material-symbols-outlined text-green-500 font-bold">check_circle</span>
                                 <span>App Móvil Operador (Offline)</span>
                             </li>
                             <li className="flex items-start gap-3 text-sm">
-                                <div className="bg-white/20 p-1 rounded-full">
-                                    <span className="material-symbols-outlined text-white !text-sm font-bold">check</span>
-                                </div>
+                                <span className="material-symbols-outlined text-green-500 font-bold">check_circle</span>
                                 <span className="font-semibold">Soporte prioritario 24/7</span>
                             </li>
                         </ul>
