@@ -159,52 +159,52 @@ export default function Dashboard() {
             {/* KPI Stats Cards */}
             <div className="stats-grid">
                 {/* Total Socios */}
-                <div className="stat-card group">
+                <div className="stat-card glass-panel">
                     <div className="stat-icon-bg blue">
                         <span className="material-symbols-outlined">groups</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Total Socios</span>
                         <span className="stat-value">{stats.totalSocios}</span>
-                        <div className="stat-trend success">
-                            <span className="material-symbols-outlined">trending_up</span>
+                        <div className="stat-trend positive">
+                            <span className="material-symbols-outlined">arrow_upward</span>
                             <span>+12% vs mes anterior</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Consumo Mensual */}
-                <div className="stat-card group">
+                <div className="stat-card glass-panel">
                     <div className="stat-icon-bg cyan">
                         <span className="material-symbols-outlined">water_drop</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Consumo Mensual</span>
                         <span className="stat-value">{stats.consumoMensual.toLocaleString()} m³</span>
-                        <div className="stat-trend warning">
-                            <span className="material-symbols-outlined">trending_up</span>
+                        <div className="stat-trend positive">
+                            <span className="material-symbols-outlined">arrow_upward</span>
                             <span>+5% vs mes anterior</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Recaudación */}
-                <div className="stat-card group">
+                <div className="stat-card glass-panel">
                     <div className="stat-icon-bg emerald">
                         <span className="material-symbols-outlined">payments</span>
                     </div>
                     <div className="stat-content">
                         <span className="stat-label">Recaudación</span>
                         <span className="stat-value">${stats.recaudacion.toLocaleString()}</span>
-                        <div className="stat-trend success">
-                            <span className="material-symbols-outlined">trending_up</span>
+                        <div className="stat-trend positive">
+                            <span className="material-symbols-outlined">arrow_upward</span>
                             <span>+18% vs mes anterior</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Lecturas Pendientes */}
-                <div className="stat-card group">
+                <div className="stat-card glass-panel">
                     <div className="stat-icon-bg amber">
                         <span className="material-symbols-outlined">pending_actions</span>
                     </div>

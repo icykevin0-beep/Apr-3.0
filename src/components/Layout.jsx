@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import './Layout.css'
 
 const navItems = [
-    { path: '/', icon: 'dashboard', label: 'Dashboard' },
+    { path: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
     { path: '/socios', icon: 'group', label: 'Socios' },
     { path: '/lecturas', icon: 'speed', label: 'Lecturas' },
     { path: '/facturacion', icon: 'receipt_long', label: 'Facturación' },
@@ -37,7 +37,6 @@ export default function Layout() {
                         <NavLink
                             key={item.path}
                             to={item.path}
-                            end={item.path === '/'}
                             className={({ isActive }) =>
                                 `nav-item ${isActive ? 'active' : ''}`
                             }

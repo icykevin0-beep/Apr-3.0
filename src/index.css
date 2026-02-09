@@ -17,23 +17,24 @@
    ============================================ */
 
 :root {
-  /* Colors - Dark Theme */
-  --color-bg-primary: #0a0f1a;
-  --color-bg-secondary: #0f172a;
-  --color-bg-card: rgba(15, 23, 42, 0.8);
-  --color-bg-card-hover: rgba(30, 41, 59, 0.9);
-  --color-bg-sidebar: rgba(10, 15, 26, 0.95);
+  /* Colors - Dark Theme (Stitch Design) */
+  --color-bg-primary: #0f1923;
+  --color-bg-secondary: #1a1f36;
+  --color-bg-card: rgba(33, 54, 74, 0.4);
+  --color-bg-card-hover: rgba(37, 43, 72, 0.6);
+  --color-bg-sidebar: #1a1f36;
 
-  /* Glass Effect */
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(81, 169, 251, 0.15);
+  /* Glass Effect (Stitch Design) */
+  --glass-bg: rgba(33, 54, 74, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
-  /* Primary Colors */
-  --color-primary: #51a9fb;
-  --color-primary-light: #7bc0ff;
-  --color-primary-dark: #2d8ae8;
-  --color-primary-glow: rgba(81, 169, 251, 0.3);
+  /* Primary Colors (Stitch Design) */
+  --color-primary: #4facfe;
+  --color-primary-light: #667eea;
+  --color-primary-dark: #3b82f6;
+  --color-primary-glow: rgba(79, 172, 254, 0.3);
+  --color-gradient-blue-purple: linear-gradient(135deg, #4facfe 0%, #667eea 100%);
 
   /* Accent Colors */
   --color-success: #10b981;
@@ -196,6 +197,23 @@ a:hover {
     margin-left: 0;
     padding: var(--spacing-md);
   }
+}
+
+/* ============================================
+   Glass Panel Component (Stitch Design)
+   ============================================ */
+
+.glass-panel {
+  background: rgba(33, 54, 74, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.glass-panel:hover {
+  background: rgba(37, 43, 72, 0.6);
 }
 
 /* ============================================
